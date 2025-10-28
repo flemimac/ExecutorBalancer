@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Система распределения заявок</title>
+    <title>Raw Distribution</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         * {
@@ -66,7 +66,7 @@
             font-weight: 500;
             padding: 8px 16px;
             border-radius: 6px;
-            transition: all 0.2s ease;
+            transition: all 0.05s ease;
         }
 
         .nav-link:hover {
@@ -87,18 +87,38 @@
         }
 
         .stat-card {
-            background: #ffffff;
+            background: linear-gradient(135deg, #ffffff, #f8fafc);
             padding: 24px;
             border-radius: 12px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             border: 1px solid #e2e8f0;
             text-align: center;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
         }
 
         .stat-card:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-card:nth-child(1) {
+            background: linear-gradient(135deg, #fff7ed, #fed7aa);
+            border-left: 4px solid #ea580c;
+        }
+
+        .stat-card:nth-child(2) {
+            background: linear-gradient(135deg, #fff7ed, #fed7aa);
+            border-left: 4px solid #ea580c;
+        }
+
+        .stat-card:nth-child(3) {
+            background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+            border-left: 4px solid #2563eb;
+        }
+
+        .stat-card:nth-child(4) {
+            background: linear-gradient(135deg, #f0fdf4, #bbf7d0);
+            border-left: 4px solid #16a34a;
         }
 
         .stat-card h3 {
@@ -193,7 +213,7 @@
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.05s ease;
             display: inline-flex;
             align-items: center;
             gap: 6px;
@@ -261,7 +281,10 @@
             padding: 15px;
             border: 1px solid #e2e8f0;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-            transition: all 0.3s ease;
+            transition: all 0.08s ease;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
         }
 
         .chart-section:hover {
@@ -279,8 +302,10 @@
             padding-bottom: 6px;
         }
 
+        /* Все панели теперь имеют одинаковую высоту */
+
         .chart-container {
-            height: 200px;
+            flex: 1;
             display: flex;
             align-items: flex-end;
             justify-content: space-around;
@@ -383,7 +408,7 @@
             flex-direction: column;
             align-items: center;
             position: relative;
-            transition: all 0.3s ease;
+            transition: all 0.08s ease;
             cursor: pointer;
         }
 
@@ -395,7 +420,7 @@
             width: 100%;
             background: #1e40af;
             border-radius: 8px 8px 0 0;
-            transition: all 0.3s ease;
+            transition: all 0.08s ease;
             position: relative;
             min-height: 20px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -441,7 +466,7 @@
             border-left: 4px solid #1e40af;
             background: #ffffff;
             border: 1px solid #e2e8f0;
-            transition: all 0.2s ease;
+            transition: all 0.05s ease;
             min-height: 80px;
         }
         
@@ -470,6 +495,93 @@
         .request-item.completed {
             border-left-color: #059669;
             background: #f0fdf4;
+        }
+
+        /* Чередующиеся светлые синие оттенки для статусов */
+        .request-item:nth-child(odd).pending {
+            background: linear-gradient(135deg, #f0f4ff, #e0f2fe);
+            border-left-color: #3b82f6;
+        }
+
+        .request-item:nth-child(even).pending {
+            background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+            border-left-color: #2563eb;
+        }
+
+        .request-item:nth-child(odd).assigned {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border-left-color: #0ea5e9;
+        }
+
+        .request-item:nth-child(even).assigned {
+            background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+            border-left-color: #0891b2;
+        }
+
+        .request-item:nth-child(odd).completed {
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            border-left-color: #10b981;
+        }
+
+        .request-item:nth-child(even).completed {
+            background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+            border-left-color: #059669;
+        }
+
+        /* Улучшенные стили для статусов */
+        .request-item .status-text {
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .request-item.pending .status-text {
+            background: rgba(245, 158, 11, 0.1);
+            color: #92400e;
+        }
+
+        .request-item.assigned .status-text {
+            background: rgba(14, 165, 233, 0.1);
+            color: #0c4a6e;
+        }
+
+        .request-item.completed .status-text {
+            background: rgba(16, 185, 129, 0.1);
+            color: #064e3b;
+        }
+
+        /* Чередующиеся синие оттенки для строк таблицы */
+        .report-table tr:nth-child(odd) {
+            background: linear-gradient(135deg, #f0f4ff, #e0f2fe);
+        }
+
+        .report-table tr:nth-child(even) {
+            background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+        }
+
+        .report-table tr:hover {
+            background: linear-gradient(135deg, #bae6fd, #7dd3fc);
+            transform: scale(1.01);
+            transition: all 0.2s ease;
+        }
+
+        /* Стили для чередующихся строк */
+        .report-table .odd-row {
+            background: linear-gradient(135deg, #f0f4ff, #e0f2fe) !important;
+        }
+
+        .report-table .even-row {
+            background: linear-gradient(135deg, #e0f2fe, #bae6fd) !important;
+        }
+
+        .report-table .odd-row:hover,
+        .report-table .even-row:hover {
+            background: linear-gradient(135deg, #bae6fd, #7dd3fc) !important;
+            transform: scale(1.01);
+            transition: all 0.2s ease;
         }
 
         .request-item.new {
@@ -550,7 +662,7 @@
             cursor: pointer;
             font-size: 0.875rem;
             font-weight: 500;
-            transition: all 0.2s ease;
+            transition: all 0.05s ease;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
@@ -615,7 +727,7 @@
         .progress-fill {
             height: 100%;
             background: linear-gradient(90deg, #667eea, #764ba2);
-            transition: width 0.5s;
+            transition: width 0.12s;
         }
 
         .error-percent {
@@ -695,7 +807,7 @@
             border: 1px solid #d1d5db;
             border-radius: 8px;
             font-size: 0.875rem;
-            transition: all 0.2s ease;
+            transition: all 0.05s ease;
             background: #ffffff;
         }
 
@@ -732,6 +844,54 @@
         
         .modal-content .btn-group button {
             flex: 1;
+        }
+
+        .parameter-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .param-name, .param-value {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .remove-param {
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .remove-param:hover {
+            background: #c82333;
+        }
+
+        .add-param-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .add-param-btn:hover {
+            background: #218838;
         }
 
         .modal-body {
@@ -958,6 +1118,7 @@
             font-size: 0.875rem;
         }
 
+
         /* Анимация загрузки */
         .loading {
             display: inline-block;
@@ -992,7 +1153,7 @@
             background: linear-gradient(135deg, #5a6fd8, #6a4190);
         }
 
-        /* Адаптивность */
+        
         @media (max-width: 768px) {
             .container {
                 padding: 0 16px;
@@ -1044,7 +1205,7 @@
     <div class="container">
         <nav class="navbar">
             <div class="nav-brand">
-                <h1>Система распределения заявок</h1>
+                <h1>Raw Distribution</h1>
             </div>
             <div class="nav-links">
                 <a href="#main" class="nav-link active" onclick="scrollToSection('main')">Главная</a>
@@ -1140,6 +1301,54 @@
         let autoRefreshInterval = null;
         let lastRequestIds = new Set();
         
+        function getOptimalBatchSettings(executorCount, pendingRequests) {
+            let batchSize;
+            
+            if (pendingRequests < 3) {
+                batchSize = 1; 
+            } else if (pendingRequests < 10) {
+                batchSize = 2;
+            } else if (pendingRequests < 25) {
+                batchSize = 3; 
+            } else if (pendingRequests < 50) {
+                batchSize = 4; 
+            } else if (pendingRequests < 100) {
+                batchSize = 6; 
+            } else if (pendingRequests < 200) {
+                batchSize = 8; 
+            } else if (pendingRequests < 500) {
+                batchSize = 10; 
+            } else if (pendingRequests < 1000) {
+                batchSize = 12; 
+            } else {
+                batchSize = 15; 
+            }
+            
+            const maxBatchSize = Math.max(1, Math.floor(pendingRequests / 3));
+            batchSize = Math.min(batchSize, maxBatchSize);
+            
+            const maxPerExecutor = Math.max(1, Math.floor(pendingRequests / executorCount));
+            batchSize = Math.min(batchSize, maxPerExecutor);
+            
+            batchSize = Math.max(1, batchSize);
+            
+            let grouping;
+            if (pendingRequests < 20) {
+                grouping = 'id'; 
+            } else if (pendingRequests < 100) {
+                grouping = 'city'; 
+            } else {
+                grouping = 'data_type'; 
+            }
+            
+            console.log(`🔧 Автоматический выбор батча: ${pendingRequests} заявок, ${executorCount} исполнителей → размер батча: ${batchSize}, группировка: ${grouping}`);
+            
+            return {
+                size: batchSize,
+                grouping: grouping
+            };
+        }
+        
         // Мониторинг скорости обработки
         let requestStats = {
             startTime: Date.now(),
@@ -1149,12 +1358,10 @@
             requestsPerMinute: 0
         };
 
-        // Функция экспорта в Excel
         async function exportToExcel() {
             try {
                 console.log('🔄 Начинаем экспорт данных в Excel...');
                 
-                // Получаем все данные
                 const [statsResponse, requestsResponse, executorsResponse] = await Promise.all([
                     fetch(`${API_BASE}/stats`),
                     fetch(`${API_BASE}/requests/recent/1000`),
@@ -1165,10 +1372,8 @@
                 const requests = await requestsResponse.json();
                 const executors = await executorsResponse.json();
 
-                // Создаем Excel файл
                 const workbook = XLSX.utils.book_new();
 
-                // 1. Лист с заявками
                 const requestsData = requests.map(req => ({
                     'ID заявки': req.id,
                     'Статус': req.status,
@@ -1184,7 +1389,6 @@
                 const requestsSheet = XLSX.utils.json_to_sheet(requestsData);
                 XLSX.utils.book_append_sheet(workbook, requestsSheet, 'Заявки');
 
-                // 2. Лист с исполнителями
                 const executorsData = executors.map(exec => ({
                     'ID исполнителя': exec.id,
                     'Имя': exec.name,
@@ -1202,7 +1406,6 @@
                 const executorsSheet = XLSX.utils.json_to_sheet(executorsData);
                 XLSX.utils.book_append_sheet(workbook, executorsSheet, 'Исполнители');
 
-                // 3. Лист со статистикой
                 const statsData = [
                     ['Показатель', 'Значение'],
                     ['Всего заявок', stats.total_requests],
@@ -1219,7 +1422,6 @@
                 const statsSheet = XLSX.utils.aoa_to_sheet(statsData);
                 XLSX.utils.book_append_sheet(workbook, statsSheet, 'Статистика');
 
-                // 4. Лист с графиками (данные для построения)
                 const chartsData = [
                     ['Исполнитель', 'Выполнено заявок', 'В обработке', 'Эффективность (%)'],
                     ...executors.map(exec => [
@@ -1240,7 +1442,6 @@
                         const cellAddress = XLSX.utils.encode_cell({r: R, c: C});
                         if (!chartsSheet[cellAddress]) continue;
                         
-                        // Заголовки
                         if (R === 0) {
                             chartsSheet[cellAddress].s = {
                                 font: { bold: true, color: { rgb: "FFFFFF" } },
@@ -1259,21 +1460,19 @@
                 
                 XLSX.utils.book_append_sheet(workbook, chartsSheet, 'Данные для графиков');
 
-                // 5. Лист с распределением по статусам
                 const statusData = [
                     ['Статус', 'Количество', 'Процент'],
-                    ['В ожидании', stats.pending_requests, 
+                    ['⏳ В ожидании', stats.pending_requests, 
                         Math.round((stats.pending_requests / stats.total_requests) * 100)],
-                    ['В обработке', stats.assigned_requests, 
+                    ['🔄 В обработке', stats.assigned_requests, 
                         Math.round((stats.assigned_requests / stats.total_requests) * 100)],
-                    ['Завершено', stats.completed_requests, 
+                    ['✅ Завершено', stats.completed_requests, 
                         Math.round((stats.completed_requests / stats.total_requests) * 100)]
                 ];
 
                 const statusSheet = XLSX.utils.aoa_to_sheet(statusData);
                 XLSX.utils.book_append_sheet(workbook, statusSheet, 'Распределение по статусам');
 
-                // 6. Лист с анализом производительности
                 const performanceData = [
                     ['Метрика', 'Значение', 'Описание'],
                     ['Общая эффективность системы (%)', 
@@ -1303,14 +1502,12 @@
                 const performanceSheet = XLSX.utils.aoa_to_sheet(performanceData);
                 XLSX.utils.book_append_sheet(workbook, performanceSheet, 'Анализ производительности');
 
-                // 7. Лист с временной статистикой (последние 24 часа)
                 const timeData = [];
                 const now = new Date();
                 for (let i = 23; i >= 0; i--) {
                     const hour = new Date(now.getTime() - i * 60 * 60 * 1000);
                     const hourStr = hour.getHours().toString().padStart(2, '0') + ':00';
                     
-                    // Симулируем данные по часам (в реальном приложении это было бы из базы данных)
                     const simulatedRequests = Math.floor(Math.random() * 50) + 10;
                     const simulatedCompleted = Math.floor(simulatedRequests * (0.7 + Math.random() * 0.3));
                     
@@ -1330,14 +1527,12 @@
                 const timeSheet = XLSX.utils.aoa_to_sheet(timeSheetData);
                 XLSX.utils.book_append_sheet(workbook, timeSheet, 'Временная статистика');
 
-                // Сохраняем файл
                 const fileName = `requests_export_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.xlsx`;
                 XLSX.writeFile(workbook, fileName);
 
                 console.log('✅ Экспорт завершен успешно!');
                 console.log(`📁 Файл сохранен: ${fileName}`);
                 
-                // Показываем уведомление
                 showNotification('Экспорт в Excel завершен успешно!', 'success');
 
             } catch (error) {
@@ -1353,12 +1548,10 @@
             return executor ? executor.name : `Исполнитель #${executorId}`;
         }
 
-        // Функция экспорта в HTML с графиками
         async function exportToHTML() {
             try {
                 console.log('🔄 Создаем HTML отчет с графиками...');
                 
-                // Получаем все данные
                 const [statsResponse, requestsResponse, executorsResponse] = await Promise.all([
                     fetch(`${API_BASE}/stats`),
                     fetch(`${API_BASE}/requests/recent/1000`),
@@ -1369,10 +1562,8 @@
                 const requests = await requestsResponse.json();
                 const executors = await executorsResponse.json();
 
-                // Создаем простой HTML отчет
                 const htmlContent = createSimpleHTMLReport(stats, requests, executors);
 
-                // Создаем и скачиваем файл
                 const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement('a');
@@ -1392,27 +1583,30 @@
             }
         }
 
-        // Функция создания простого HTML отчета
         function createSimpleHTMLReport(stats, requests, executors) {
             const currentDate = new Date().toLocaleString('ru-RU');
             
-            // Создаем таблицу заявок
             let requestsTable = '';
-            requests.slice(0, 50).forEach(req => {
-                const statusText = req.status === 'completed' ? 'Завершено' : 
-                                 req.status === 'assigned' ? 'В обработке' : 'В ожидании';
+            requests.slice(0, 50).forEach((req, index) => {
+                const statusText = req.status === 'completed' ? '✅ Завершено' : 
+                                 req.status === 'assigned' ? '🔄 В обработке' : '⏳ В ожидании';
                 const executorName = getExecutorName(req.assigned_to, executors);
                 const city = req.parameters?.parameters?.city || 'Не указан';
                 const dataType = req.parameters?.parameters?.data_type || 'Не указан';
                 const createdDate = new Date(req.created_at).toLocaleString('ru-RU');
                 
-                requestsTable += '<tr>' +
-                    '<td>#' + req.id + '</td>' +
-                    '<td>' + statusText + '</td>' +
-                    '<td>' + city + '</td>' +
-                    '<td>' + dataType + '</td>' +
-                    '<td>' + executorName + '</td>' +
-                    '<td>' + createdDate + '</td>' +
+                const rowClass = index % 2 === 0 ? 'odd-row' : 'even-row';
+                const rowStyle = index % 2 === 0 ? 
+                    'background: linear-gradient(135deg, #f0f4ff, #e0f2fe);' : 
+                    'background: linear-gradient(135deg, #e0f2fe, #bae6fd);';
+                
+                requestsTable += `<tr class="${rowClass}" style="${rowStyle}">` +
+                    '<td style="padding: 12px; border-bottom: 1px solid #eee;">#' + req.id + '</td>' +
+                    '<td style="padding: 12px; border-bottom: 1px solid #eee;">' + statusText + '</td>' +
+                    '<td style="padding: 12px; border-bottom: 1px solid #eee;">' + city + '</td>' +
+                    '<td style="padding: 12px; border-bottom: 1px solid #eee;">' + dataType + '</td>' +
+                    '<td style="padding: 12px; border-bottom: 1px solid #eee;">' + executorName + '</td>' +
+                    '<td style="padding: 12px; border-bottom: 1px solid #eee;">' + createdDate + '</td>' +
                 '</tr>';
             });
             
@@ -1444,7 +1638,7 @@
                         '</div>' +
                         '<div style="background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 30px;">' +
                             '<h3 style="padding: 20px; margin: 0; background: #f8f9fa;">Детальная информация по заявкам</h3>' +
-                            '<table style="width: 100%; border-collapse: collapse;">' +
+                            '<table class="report-table" style="width: 100%; border-collapse: collapse;">' +
                                 '<thead>' +
                                     '<tr>' +
                                         '<th style="padding: 12px; text-align: left; border-bottom: 1px solid #eee; background: #f8f9fa; font-weight: 600; color: #333;">ID заявки</th>' +
@@ -1468,7 +1662,6 @@
                 '</html>';
         }
 
-        // Функция показа уведомлений
         function showNotification(message, type = 'info') {
             const notification = document.createElement('div');
             notification.style.cssText = 'position: fixed; top: 20px; right: 20px; padding: 12px 20px; border-radius: 8px; color: white; font-weight: 500; z-index: 10000; animation: slideIn 0.3s ease; max-width: 300px; word-wrap: break-word;';
@@ -1492,13 +1685,11 @@
             }, 3000);
         }
 
-        // Функция для обновления статистики обработки
         function updateRequestStats() {
             const now = Date.now();
             const timeDiff = now - requestStats.lastMinuteTime;
             
-            // Если прошла минута, выводим статистику
-            if (timeDiff >= 60000) { // 60 секунд
+            if (timeDiff >= 60000) { 
                 const requestsThisMinute = requestStats.totalProcessed - requestStats.lastMinuteProcessed;
                 const totalTime = (now - requestStats.startTime) / 1000 / 60; // в минутах
                 const avgRequestsPerMinute = Math.round(requestStats.totalProcessed / totalTime);
@@ -1511,27 +1702,24 @@
                 console.log(`🎯 Текущая скорость: ${requestsThisMinute} заявок/мин`);
                 console.log(`🕐 Время: ${new Date().toLocaleTimeString()}`);
                 
-                // Дополнительная статистика производительности
                 const requestsPerSecond = Math.round(requestsThisMinute / 60 * 10) / 10;
                 const efficiency = requestsThisMinute > 0 ? '🟢 Высокая' : '🟡 Низкая';
                 console.log(`🚀 Производительность: ${requestsPerSecond} заявок/сек`);
                 console.log(`📈 Эффективность: ${efficiency}`);
                 console.log('==========================================');
                 
-                // Обновляем статистику для следующей минуты
                 requestStats.lastMinuteProcessed = requestStats.totalProcessed;
                 requestStats.lastMinuteTime = now;
                 requestStats.requestsPerMinute = requestsThisMinute;
             }
         }
+
         
-        // Функция для увеличения счетчика обработанных заявок
         function incrementProcessedRequests() {
             requestStats.totalProcessed++;
             updateRequestStats();
         }
         
-        // Функция для получения текущей статистики (можно вызвать из консоли)
         function getCurrentStats() {
             const now = Date.now();
             const totalTime = (now - requestStats.startTime) / 1000 / 60;
@@ -1555,7 +1743,6 @@
             };
         }
         
-        // Функция для получения краткой статистики в реальном времени
         function getQuickStats() {
             const now = Date.now();
             const totalTime = (now - requestStats.startTime) / 1000 / 60;
@@ -1576,13 +1763,10 @@
             };
         }
         
-        // Делаем функции доступными глобально для вызова из консоли
         window.getCurrentStats = getCurrentStats;
         window.getQuickStats = getQuickStats;
 
-        // Инициализация при загрузке страницы
         document.addEventListener('DOMContentLoaded', function() {
-            // Инициализируем статистику обработки
             requestStats.startTime = Date.now();
             requestStats.lastMinuteTime = Date.now();
             requestStats.totalProcessed = 0;
@@ -1592,15 +1776,12 @@
             console.log('📊 Статистика будет выводиться каждую минуту в консоль (F12)');
             
             loadStats();
-            loadRecentRequests(); // Загружаем заявки один раз при загрузке страницы
-            
-            // Создаем начальные заявки для бесконечной работы
+            loadRecentRequests(); 
             setTimeout(async () => {
                 try {
                     const statsRes = await fetch(`${API_BASE}/stats`);
                     const stats = await statsRes.json();
                     
-                    // Если заявок мало, создаем много для бесконечной работы
                     if (stats.pending_requests + stats.assigned_requests < 50) {
                         await createRandomRequests();
                         await createRandomRequests();
@@ -1613,15 +1794,12 @@
                 }
             }, 1000);
             
-            // Автоматически включаем автообновление
-            const checkbox = document.getElementById('auto-refresh');
-            if (checkbox) {
-                checkbox.checked = true;
-                toggleAutoRefresh();
-            }
-            
-            // Запускаем фоновое создание заявок
             startBackgroundRequestCreation();
+            
+            setTimeout(() => {
+                startAutoRefresh();
+                console.log('✅ Автообновление включено автоматически');
+            }, 2000);
             
             
         });
@@ -1637,13 +1815,12 @@
                 updateStatValue('completed-requests', stats.completed_requests);
                 updateStatValue('active-executors', stats.active_executors);
                 
-                // Обновляем погрешность с анимацией
                 const errorEl = document.getElementById('error-percent');
                 const oldValue = parseFloat(errorEl.textContent) || 0;
                 const newValue = stats.distribution_error_percent;
                 
                 if (oldValue !== newValue) {
-                    errorEl.style.transition = 'all 0.3s';
+                    errorEl.style.transition = 'all 0.08s';
                     errorEl.style.transform = 'scale(1.2)';
                     errorEl.style.color = newValue > 2 ? '#dc3545' : '#28a745';
                     
@@ -1656,7 +1833,6 @@
                     errorEl.textContent = newValue + '%';
                 }
                 
-                // Устанавливаем правильный класс
                 if (stats.distribution_error_percent > 2) {
                     errorEl.className = 'value error-percent';
                 } else {
@@ -1665,7 +1841,7 @@
 
                 const cards = document.querySelectorAll('.stat-card');
                 cards.forEach(card => {
-                    card.style.transition = 'all 0.3s';
+                    card.style.transition = 'all 0.08s';
                     card.style.transform = 'scale(1.05)';
                     setTimeout(() => {
                         card.style.transform = 'scale(1)';
@@ -1675,12 +1851,14 @@
                 updateExecutorsList(stats.executor_stats);
                 updateChart(stats.executor_stats);
                 
-               // Обновляем все графики
                updateProgressChart(stats);
                updatePerformanceAnalysisChart(stats.executor_stats);
                 
-                // Обновляем заявки для анимации
                 await loadRecentRequests();
+                
+                if (Math.random() < 0.1) { 
+                    await loadRecentRequests();
+                }
                 
             } catch (error) {
                 console.error('Ошибка загрузки:', error);
@@ -1697,7 +1875,7 @@
             const oldValue = parseInt(element.textContent) || 0;
             
             if (oldValue !== newValue) {
-                element.style.transition = 'all 0.3s';
+                element.style.transition = 'all 0.08s';
                 element.style.transform = 'scale(1.2)';
                 element.style.color = '#28a745';
                 
@@ -1720,7 +1898,6 @@
                     block: 'start'
                 });
                 
-                // Обновляем активную ссылку в навигации
                 document.querySelectorAll('.nav-link').forEach(link => {
                     link.classList.remove('active');
                 });
@@ -1797,7 +1974,6 @@
                 if (list.innerHTML.indexOf('Нет исполнителей') === -1) {
                     list.innerHTML = '<p style="text-align: center; color: #999;">Нет исполнителей</p>';
                 }
-                // Устанавливаем минимальную высоту для пустой панели
                 if (panel) {
                     panel.style.minHeight = '200px';
                 }
@@ -1808,24 +1984,19 @@
             let newHTML = '';
             
             executors.forEach(executor => {
-                // Формируем строку с параметрами
                 let paramsText = '';
-                if (executor.parameters) {
+                if (executor.parameters && Object.keys(executor.parameters).length > 0) {
                     const params = [];
-                    if (executor.parameters.city) {
-                        params.push(`Город: ${executor.parameters.city}`);
-                    }
-                    if (executor.parameters.data_type) {
-                        const dataTypeNames = {
-                            'raster': 'Растровые',
-                            'numeric': 'Числовые', 
-                            'text': 'Текстовые'
-                        };
-                        params.push(`Тип: ${dataTypeNames[executor.parameters.data_type] || executor.parameters.data_type}`);
+                    for (const [key, value] of Object.entries(executor.parameters)) {
+                        const dataType = detectDataType(value);
+                        const typeIcon = getDataTypeIcon(dataType);
+                        const typeDescription = getDataTypeDescription(dataType);
+                        params.push(`<span title="Тип данных: ${typeDescription}">${typeIcon} ${key}: ${value} (${typeDescription})</span>`);
                     }
                     if (params.length > 0) {
-                        paramsText = `<div style="color: #1e40af; font-size: 0.85em; margin-top: 4px;">
-                            ${params.join(' | ')}
+                        paramsText = `<div style="color: #1e40af; font-size: 0.85em; margin-top: 4px; padding: 8px; background: #f0f4ff; border-radius: 4px; border-left: 3px solid #1e40af;">
+                            <div style="font-weight: bold; margin-bottom: 4px; color: #1e40af;">Параметры исполнителя:</div>
+                            ${params.join('<br>')}
                         </div>`;
                     }
                 }
@@ -1852,7 +2023,6 @@
             if (currentHTML !== newHTML) {
                 list.innerHTML = newHTML;
                 
-                // Адаптивно изменяем высоту панели в зависимости от количества исполнителей
                 if (panel) {
                     const itemHeight = 100; // Примерная высота одного элемента исполнителя
                     const minHeight = 200;
@@ -1864,7 +2034,7 @@
                     item.style.opacity = '0';
                     item.style.transform = 'translateX(-20px)';
                     setTimeout(() => {
-                        item.style.transition = 'all 0.5s';
+                        item.style.transition = 'all 0.12s';
                         item.style.opacity = '1';
                         item.style.transform = 'translateX(0)';
                     }, index * 50);
@@ -2127,9 +2297,9 @@
                 
                 // Обновляем статус поэтапно
                 const statusText = {
-                    'pending': '⏳ Ожидает',
-                    'assigned': '📋 Назначена',
-                    'completed': '✅ Завершена'
+                    'pending': '⏳ В ожидании',
+                    'assigned': '🔄 В обработке',
+                    'completed': '✅ Завершено'
                 };
                 
                 const statusDiv = foundItem.querySelector('div');
@@ -2185,9 +2355,9 @@
                     firstItem.appendChild(approvalIndicator);
                     
                     const statusText = {
-                        'pending': '⏳ Ожидает',
-                        'assigned': '📋 Назначена',
-                        'completed': '✅ Завершена'
+                        'pending': '⏳ В ожидании',
+                        'assigned': '🔄 В обработке',
+                        'completed': '✅ Завершено'
                     };
                     
                     const statusDiv = firstItem.querySelector('div');
@@ -2235,11 +2405,11 @@
                 }
                 
                 let newHTML = '';
-                requests.forEach(request => {
+                requests.forEach((request, index) => {
                     const statusText = {
-                        'pending': '⏳ Ожидает',
-                        'assigned': '📋 Назначена',
-                        'completed': '✅ Завершена'
+                        'pending': '⏳ В ожидании',
+                        'assigned': '🔄 В обработке',
+                        'completed': '✅ Завершено'
                     };
                     
                     const executorName = request.assigned_to ? ` → Исполнитель ${request.assigned_to}` : '';
@@ -2253,9 +2423,14 @@
                         }
                         if (request.parameters.data_type) {
                             const dataTypeNames = {
-                                'raster': 'Растровые',
-                                'numeric': 'Числовые', 
-                                'text': 'Текстовые'
+                                'raster': 'Растровые данные',
+                                'numeric': 'Числовые данные', 
+                                'text': 'Текстовые данные',
+                                'integer': 'Целое число',
+                                'float': 'Число с плавающей точкой',
+                                'date': 'Дата',
+                                'string': 'Строка',
+                                'unknown': 'Неизвестный тип'
                             };
                             params.push(`Тип: ${dataTypeNames[request.parameters.data_type] || request.parameters.data_type}`);
                         }
@@ -2271,11 +2446,16 @@
                         paramsText = params.join(' | ');
                     }
                     
+                    // Добавляем чередующиеся синие оттенки
+                    const alternatingStyle = index % 2 === 0 ? 
+                        'background: linear-gradient(135deg, #f0f4ff, #e0f2fe);' : 
+                        'background: linear-gradient(135deg, #e0f2fe, #bae6fd);';
+                    
                     newHTML += `
-                        <div class="request-item ${request.status}">
+                        <div class="request-item ${request.status}" style="${alternatingStyle}">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <strong>#${request.id}</strong>
-                                <span style="font-size: 0.8em; color: #666;">${statusText[request.status]}</span>
+                                <span class="status-text">${statusText[request.status]}</span>
                             </div>
                             <div style="font-size: 0.8em; color: #999; margin-top: 3px;">
                                 ${paramsText || JSON.stringify(request.parameters || {}).substring(0, 40) + '...'}
@@ -2318,7 +2498,7 @@
                 setTimeout(() => {
                     items.forEach((item, index) => {
                         setTimeout(() => {
-                            item.style.transition = 'all 0.4s ease';
+                            item.style.transition = 'all 0.1s ease';
                             item.style.opacity = '1';
                             item.style.transform = 'translateY(0)';
                         }, index * 20); // Одинаковая задержка 20ms между заявками
@@ -2359,7 +2539,7 @@
                 } catch (error) {
                     // Игнорируем ошибки
                 }
-            }, 1000); // Каждую секунду проверяем
+            }, 500); // Каждые 500ms проверяем
         }
 
         function showExecutorModal() {
@@ -2374,29 +2554,126 @@
             modal.style.display = 'none';
             // Очищаем поля
             document.getElementById('executor-name').value = '';
-            document.getElementById('executor-city').value = '';
-            document.getElementById('executor-data-type').value = '';
+            // Очищаем параметры, оставляя только одну строку
+            const container = document.getElementById('parameters-container');
+            container.innerHTML = '<div class="parameter-row"><input type="text" placeholder="Название параметра" class="param-name"><input type="text" placeholder="Значение" class="param-value"><button type="button" onclick="removeParameter(this)" class="remove-param">×</button></div>';
         }
         
+        function addParameter() {
+            const container = document.getElementById('parameters-container');
+            const newRow = document.createElement('div');
+            newRow.className = 'parameter-row';
+            newRow.innerHTML = '<input type="text" placeholder="Название параметра" class="param-name"><input type="text" placeholder="Значение" class="param-value"><button type="button" onclick="removeParameter(this)" class="remove-param">×</button>';
+            container.appendChild(newRow);
+        }
+
+        function removeParameter(button) {
+            const container = document.getElementById('parameters-container');
+            if (container.children.length > 1) {
+                button.parentElement.remove();
+            }
+        }
+
+        function detectDataType(value) {
+            if (!value || typeof value !== 'string') {
+                return 'unknown';
+            }
+            
+            value = value.trim();
+            
+            // Проверка на дату
+            const datePatterns = [
+                /^\d{4}-\d{2}-\d{2}$/,  // YYYY-MM-DD
+                /^\d{2}\.\d{2}\.\d{4}$/,  // DD.MM.YYYY
+                /^\d{2}\/\d{2}\/\d{4}$/,   // DD/MM/YYYY
+                /^\d{4}\.\d{2}\.\d{2}$/,  // YYYY.MM.DD
+            ];
+            
+            for (const pattern of datePatterns) {
+                if (pattern.test(value)) {
+                    return 'date';
+                }
+            }
+            
+            // Проверка на целое число
+            if (/^-?\d+$/.test(value)) {
+                return 'integer';
+            }
+            
+            // Проверка на число с плавающей точкой
+            if (/^-?\d+\.\d+$/.test(value)) {
+                return 'float';
+            }
+            
+            // Проверка на растровые данные
+            const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.tif', '.webp', '.svg'];
+            if (imageExtensions.some(ext => value.toLowerCase().endsWith(ext))) {
+                return 'raster';
+            }
+            
+            // Проверка на текстовые данные
+            if (/^[а-яёА-ЯЁa-zA-Z\s]+$/.test(value)) {
+                return 'text';
+            }
+            
+            // Проверка на строки
+            if (value.length > 0) {
+                return 'string';
+            }
+            
+            return 'unknown';
+        }
+
+        function getDataTypeIcon(dataType) {
+            const icons = {
+                'integer': '🔢',
+                'float': '📊',
+                'date': '📅',
+                'raster': '🖼️',
+                'text': '📝',
+                'string': '📄',
+                'unknown': '❓'
+            };
+            return icons[dataType] || '❓';
+        }
+
+        function getDataTypeDescription(dataType) {
+            const descriptions = {
+                'integer': 'Целое число',
+                'float': 'Число с плавающей точкой',
+                'date': 'Дата',
+                'raster': 'Растровое изображение',
+                'text': 'Текстовые данные',
+                'string': 'Строка',
+                'unknown': 'Неизвестный тип'
+            };
+            return descriptions[dataType] || 'Неизвестный тип';
+        }
+
         async function createExecutorFromModal() {
             const name = document.getElementById('executor-name').value.trim();
-            const city = document.getElementById('executor-city').value;
-            const dataType = document.getElementById('executor-data-type').value;
-            
             
             if (!name) {
                 console.log('[ERROR] Введите имя исполнителя!');
                 return;
             }
             
+            // Собираем параметры
+            const parameters = {};
+            const paramRows = document.querySelectorAll('.parameter-row');
+            paramRows.forEach(row => {
+                const paramName = row.querySelector('.param-name').value.trim();
+                const paramValue = row.querySelector('.param-value').value.trim();
+                if (paramName && paramValue) {
+                    parameters[paramName] = paramValue;
+                }
+            });
+            
             try {
-                const executorData = { name };
-                if (city) {
-                    executorData.city = city;
-                }
-                if (dataType) {
-                    executorData.data_type = dataType;
-                }
+                const executorData = { 
+                    name,
+                    parameters: Object.keys(parameters).length > 0 ? parameters : null
+                };
                 
                 const response = await fetch(`${API_BASE}/executors/`, {
                     method: 'POST',
@@ -2499,20 +2776,32 @@
                 
                 const requests = [];
                 const types = ['urgent', 'normal', 'low'];
-                const cities = ['Москва', 'Санкт-Петербург', 'Новосибирск', 'Екатеринбург', 'Казань'];
-                const dataTypes = ['raster', 'numeric', 'text'];
                 
-                // Создаем 5-12 заявок за раз (еще больше для бесконечной работы)
+                // Разнообразные параметры для тестирования
+                const parameterSets = [
+                    { city: 'Москва', priority: 'high', department: 'IT' },
+                    { city: 'Санкт-Петербург', priority: 'medium', department: 'HR' },
+                    { city: 'Новосибирск', priority: 'low', department: 'Finance' },
+                    { temperature: '25.5', humidity: '60%', location: 'Warehouse A' },
+                    { file_type: 'image.jpg', size: '2048', format: 'JPEG' },
+                    { date: '2024-01-15', time: '14:30', duration: '2.5' },
+                    { product_id: '12345', quantity: '100', price: '299.99' },
+                    { user_id: 'user_001', role: 'admin', status: 'active' },
+                    { coordinates: '55.7558,37.6176', elevation: '156', accuracy: '5.2' },
+                    { version: '2.1.0', build: '20240115', platform: 'Windows' }
+                ];
+                
+                // Создаем 5-12 заявок за раз
                 const requestsToCreate = Math.floor(Math.random() * 8) + 5;
                 
                 for (let i = 0; i < requestsToCreate; i++) {
+                    const randomParams = parameterSets[Math.floor(Math.random() * parameterSets.length)];
                     requests.push({
                         type: types[Math.floor(Math.random() * types.length)],
                         customer_id: Math.floor(Math.random() * 9000) + 1000,
                         value: Math.floor(Math.random() * 50000) + 100,
                         parameters: {
-                            city: cities[Math.floor(Math.random() * cities.length)],
-                            data_type: dataTypes[Math.floor(Math.random() * dataTypes.length)]
+                            parameters: randomParams
                         }
                     });
                 }
@@ -2628,44 +2917,71 @@ async function clearAllRequests() {
                 }
                 
                 const activeExecutors = executors.filter(e => e.is_active);
-                // Распределяем по 5 заявок на исполнителя за цикл (больше для непрерывной работы)
-                for (let i = 0; i < 5; i++) {
-                    for (const executor of activeExecutors) {
-                        try {
-                            const response = await fetch(`${API_BASE}/executors/${executor.id}/get-next-request`, {
-                                method: 'POST'
-                            });
+                
+                // Получаем статистику для автоматического выбора настроек
+                const statsRes = await fetch(`${API_BASE}/stats`);
+                const stats = await statsRes.json();
+                
+                // Автоматически выбираем оптимальные настройки батча
+                const batchSettings = getOptimalBatchSettings(activeExecutors.length, stats.pending_requests);
+                
+                console.log(`🤖 Автоматические настройки батча: размер=${batchSettings.size}, группировка=${batchSettings.grouping}, заявок=${stats.pending_requests}`);
+                
+                // Используем батчевую обработку с автоматическими настройками
+                for (const executor of activeExecutors) {
+                    try {
+                        // Получаем батч заявок с автоматическими настройками
+                        const batchResponse = await fetch(`${API_BASE}/executors/${executor.id}/get-batch-requests?batch_size=${batchSettings.size}&grouping_param=${batchSettings.grouping}`, {
+                            method: 'POST'
+                        });
+                        
+                        if (batchResponse.ok) {
+                            const batchData = await batchResponse.json();
                             
-                            // Если заявка получена, сразу завершаем её для непрерывной работы
-                            if (response.ok) {
-                                const requestData = await response.json();
-                                if (requestData) {
-                                    // Показываем анимацию движения заявки к исполнителю
-                                    animateRequestMovement(requestData.id, 'assigned');
-                                    
-                                    // Завершаем заявку через 200ms для имитации обработки
-                                    setTimeout(async () => {
-                                        try {
-                                            await fetch(`${API_BASE}/requests/${requestData.id}/complete`, {
-                                                method: 'POST',
-                                                headers: {'Content-Type': 'application/json'},
-                                                body: JSON.stringify({result: `Completed by ${executor.name}`})
-                                            });
+                            if (batchData.requests && batchData.requests.length > 0) {
+                                console.log(`📦 Батч для исполнителя ${executor.name}: ${batchData.batch_size} заявок`);
+                                
+                                // Показываем анимацию для каждой заявки в батче
+                                batchData.requests.forEach((request, index) => {
+                                    setTimeout(() => {
+                                        animateRequestMovement(request.id, 'assigned');
+                                    }, index * 50); // Небольшая задержка между анимациями
+                                });
+                                
+                                // Завершаем весь батч через 500ms
+                                setTimeout(async () => {
+                                    try {
+                                        const requestIds = batchData.requests.map(req => req.id);
+                                        const completeResponse = await fetch(`${API_BASE}/requests/batch-complete`, {
+                                            method: 'POST',
+                                            headers: {'Content-Type': 'application/json'},
+                                            body: JSON.stringify({
+                                                request_ids: requestIds,
+                                                result: `Batch completed by ${executor.name}`
+                                            })
+                                        });
+                                        
+                                        if (completeResponse.ok) {
                                             // Увеличиваем счетчик обработанных заявок
                                             incrementProcessedRequests();
-                                            // Показываем анимацию завершения заявки
-                                            setTimeout(() => {
-                                                animateRequestMovement(requestData.id, 'completed');
-                                            }, 50);
-                                        } catch (e) {
-                                            // Игнорируем ошибки завершения
+                                            
+                                            // Показываем анимацию завершения для каждой заявки
+                                            batchData.requests.forEach((request, index) => {
+                                                setTimeout(() => {
+                                                    animateRequestMovement(request.id, 'completed');
+                                                }, index * 30);
+                                            });
+                                            
+                                            console.log(`✅ Батч завершен: ${requestIds.length} заявок`);
                                         }
-                                    }, 50);
-                                }
+                                    } catch (e) {
+                                        console.error('Ошибка завершения батча:', e);
+                                    }
+                                }, 500);
                             }
-                        } catch (e) {
-                            // Игнорируем ошибки для продолжения работы
                         }
+                    } catch (e) {
+                        console.error('Ошибка получения батча:', e);
                     }
                 }
                 
@@ -2709,30 +3025,37 @@ async function clearAllRequests() {
             }
         }
 
-        function toggleAutoRefresh() {
-            const checkbox = document.getElementById('auto-refresh');
-            if (checkbox.checked) {
-                autoRefreshInterval = setInterval(async () => {
+        function startAutoRefresh() {
+            console.log('✅ Включаем автообновление...');
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+            }
+            autoRefreshInterval = setInterval(async () => {
                     try {
                         // Сначала получаем статистику
                         const statsRes = await fetch(`${API_BASE}/stats`);
                         const stats = await statsRes.json();
                         
+                        console.log('📊 Автообновление: pending=', stats.pending_requests, 'assigned=', stats.assigned_requests, 'completed=', stats.completed_requests);
+                        
                         // Если есть ожидающие заявки, распределяем их
                         if (stats.pending_requests > 0) {
+                            console.log('🔄 Распределяем заявки...');
                             await distributeRequests();
                         }
                         
                         // Завершаем случайные заявки для демонстрации
                         await completeRandomRequests();
                         
-                        // Создаем новые заявки еще чаще для бесконечной работы
-                        if (stats.pending_requests + stats.assigned_requests < 100 && Math.random() < 0.9) { // 90% вероятность
+                        // Создаем новые заявки для поддержания работы системы
+                        if (Math.random() < 0.3) { // 30% вероятность создания новых заявок
+                            console.log('➕ Создаем новые заявки...');
                             await createRandomRequests();
                         }
                         
-                        // Обновляем статистику
+                        // Обновляем статистику и все данные
                         await loadStats();
+                        await loadRecentRequests();
                         
                         // Проверяем, нужно ли остановить анимацию
                         if (stats.pending_requests + stats.assigned_requests === 0) {
@@ -2748,12 +3071,8 @@ async function clearAllRequests() {
                     } catch (error) {
                         console.log('[ERROR] Ошибка в автообновлении: ' + error.message);
                     }
-                }, 200);
-                console.log('Автообновление включено');
-            } else {
-                clearInterval(autoRefreshInterval);
-                console.log('Автообновление выключено');
-            }
+                }, 10);
+                console.log('Автообновление включено (10ms)');
         }
 
         async function handleFileUpload(event) {
@@ -2845,25 +3164,20 @@ async function clearAllRequests() {
             </div>
             
             <div class="form-group">
-                <label for="executor-city">Город (опционально):</label>
-                <select id="executor-city">
-                    <option value="">Выберите город</option>
-                    <option value="Москва">Москва</option>
-                    <option value="Санкт-Петербург">Санкт-Петербург</option>
-                    <option value="Новосибирск">Новосибирск</option>
-                    <option value="Екатеринбург">Екатеринбург</option>
-                    <option value="Казань">Казань</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="executor-data-type">Тип данных (опционально):</label>
-                <select id="executor-data-type">
-                    <option value="">Выберите тип данных</option>
-                    <option value="raster">Растровые</option>
-                    <option value="numeric">Числовые</option>
-                    <option value="text">Текстовые</option>
-                </select>
+                <label>Параметры исполнителя (опционально):</label>
+                <div id="parameters-container">
+                    <div class="parameter-row">
+                        <input type="text" placeholder="Название параметра" class="param-name">
+                        <input type="text" placeholder="Значение" class="param-value">
+                        <button type="button" onclick="removeParameter(this)" class="remove-param">×</button>
+                    </div>
+                </div>
+                <button type="button" onclick="addParameter()" class="add-param-btn">+ Добавить параметр</button>
+                <div style="margin-top: 10px; padding: 8px; background: #f8f9fa; border-radius: 4px; font-size: 0.85em; color: #666;">
+                    <strong>Справка по типам данных:</strong><br>
+                    🔢 Целое число | 📊 Число с плавающей точкой | 📅 Дата<br>
+                    🖼️ Растровое изображение | 📝 Текстовые данные | 📄 Строка
+                </div>
             </div>
             
             <div class="btn-group">

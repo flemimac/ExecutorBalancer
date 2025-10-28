@@ -6,6 +6,80 @@ from typing import List, Optional, Dict, Any
 from models import Executor, Request
 from datetime import datetime
 import json
+import re
+
+
+def detect_data_type(value: str) -> str:
+    """Автоматически определяет тип данных по значению"""
+    if not value or not isinstance(value, str):
+        return "unknown"
+    
+    value = value.strip()
+    
+    date_patterns = [
+        r'^\d{4}-\d{2}-\d{2}$',  # YYYY-MM-DD
+        r'^\d{2}\.\d{2}\.\d{4}$',  # DD.MM.YYYY
+        r'^\d{2}/\d{2}/\d{4}$',   # DD/MM/YYYY
+        r'^\d{4}\.\d{2}\.\d{2}$',  # YYYY.MM.DD
+    ]
+    
+    for pattern in date_patterns:
+        if re.match(pattern, value):
+            return "date"
+    
+    if re.match(r'^-?\d+$', value):
+        return "integer"
+    
+    if re.match(r'^-?\d+\.\d+$', value):
+        return "float"
+    
+    image_extensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.tif', '.webp', '.svg']
+    if any(value.lower().endswith(ext) for ext in image_extensions):
+        return "raster"
+    
+    if re.match(r'^[а-яёА-ЯЁa-zA-Z\s]+$', value):
+        return "text"
+    
+    if len(value) > 0:
+        return "string"
+    
+    return "unknown"
+
+
+def match_parameter_values(executor_param: str, request_param: str) -> bool:
+    """Сравнивает параметры исполнителя и заявки с учетом типов данных"""
+    if not executor_param or not request_param:
+        return False
+    
+    executor_type = detect_data_type(executor_param)
+    request_type = detect_data_type(request_param)
+    
+    if executor_type != request_type:
+        if {executor_type, request_type}.issubset({"integer", "float"}):
+            try:
+                float(executor_param)
+                float(request_param)
+                return abs(float(executor_param) - float(request_param)) < 0.001
+            except ValueError:
+                return False
+        
+        # Текстовые типы совместимы
+        if {executor_type, request_type}.issubset({"text", "string"}):
+            return executor_param.lower() == request_param.lower()
+        
+        if {executor_type, request_type}.issubset({"raster"}):
+            return executor_param.lower() == request_param.lower()
+        
+        return False
+    
+    if executor_type == "integer":
+        return int(executor_param) == int(request_param)
+    elif executor_type == "float":
+        return abs(float(executor_param) - float(request_param)) < 0.001
+    elif executor_type == "date":
+        return executor_param == request_param
+    else:  # text, string, raster
+        return executor_param.lower() == request_param.lower()
 
 
 class DistributionEngine:
@@ -24,44 +98,39 @@ class DistributionEngine:
         if not executor:
             return None
         
-        # Получаем параметры исполнителя
         executor_params = executor.parameters or {}
-        executor_city = executor_params.get("city")
-        executor_data_type = executor_params.get("data_type")
         
-        # Инициализируем переменную request
         request = None
         
-        # Если у исполнителя есть параметры, фильтруем заявки
-        if executor_city or executor_data_type:
-            # Получаем все заявки и фильтруем в Python
+        if executor_params:
             all_requests = await session.execute(
                 select(Request).where(Request.status == "pending")
             )
             all_requests = all_requests.scalars().all()
             
-            # Фильтруем заявки по параметрам
             matching_requests = []
             for req in all_requests:
                 if req.parameters and 'parameters' in req.parameters:
                     req_params = req.parameters['parameters']
                     match = True
                     
-                    if executor_city and req_params.get('city') != executor_city:
-                        match = False
-                    
-                    if executor_data_type and req_params.get('data_type') != executor_data_type:
-                        match = False
+                    for param_name, param_value in executor_params.items():
+                        if param_name in req_params:
+                            if not match_parameter_values(str(param_value), str(req_params[param_name])):
+                                match = False
+                                break
+                        else:
+                            match = False
+                            break
                     
                     if match:
                         matching_requests.append(req)
             
             if matching_requests:
-                request = matching_requests[0]  # Берем первую подходящую
+                request = matching_requests[0] 
             else:
                 request = None
         
-        # Если не нашли подходящую заявку, берем любую
         if not request:
             result = await session.execute(
                 select(Request).where(Request.status == "pending").limit(1)
@@ -168,24 +237,19 @@ class DistributionEngine:
             })
         
         if executor_stats and assigned_requests > 0:
-            # Фильтруем исполнителей, которые реально работали (обработали хотя бы 1 заявку)
             working_executors = [stats for stats in executor_stats if stats["actual_count"] > 0]
             
-            if len(working_executors) >= 2:  # Нужно минимум 2 работающих исполнителя для сравнения
-                # Используем actual_count (текущие заявки) для расчета равномерности
+            if len(working_executors) >= 2: 
                 loads = [stats["actual_count"] for stats in working_executors]
                 avg_load = sum(loads) / len(loads)
                 
                 if avg_load > 0:
-                    # Рассчитываем максимальное отклонение от среднего
                     max_deviation = max(abs(load - avg_load) for load in loads)
                     
-                    # Процент погрешности как максимальное отклонение от среднего
                     error_percent = (max_deviation / avg_load * 100)
                 else:
                     error_percent = 0
             else:
-                # Если работающих исполнителей меньше 2, погрешность = 0
                 error_percent = 0
         else:
             error_percent = 0

@@ -13,6 +13,87 @@ import io
 from database import get_db, init_db
 from models import Request, Executor
 from distribution import DistributionEngine
+import re
+from datetime import datetime as dt
+
+def detect_data_type(value: str) -> str:
+    """Автоматически определяет тип данных по значению"""
+    if not value or not isinstance(value, str):
+        return "unknown"
+    
+    value = value.strip()
+    
+    # Проверка на дату (различные форматы)
+    date_patterns = [
+        r'^\d{4}-\d{2}-\d{2}$',  # YYYY-MM-DD
+        r'^\d{2}\.\d{2}\.\d{4}$',  # DD.MM.YYYY
+        r'^\d{2}/\d{2}/\d{4}$',   # DD/MM/YYYY
+        r'^\d{4}\.\d{2}\.\d{2}$',  # YYYY.MM.DD
+    ]
+    
+    for pattern in date_patterns:
+        if re.match(pattern, value):
+            return "date"
+    
+    if re.match(r'^-?\d+$', value):
+        return "integer"
+    
+    if re.match(r'^-?\d+\.\d+$', value):
+        return "float"
+    
+    image_extensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.tif', '.webp', '.svg']
+    if any(value.lower().endswith(ext) for ext in image_extensions):
+        return "raster"
+    
+    if re.match(r'^[а-яёА-ЯЁa-zA-Z\s]+$', value):
+        return "text"
+    
+    if len(value) > 0:
+        return "string"
+    
+    return "unknown"
+
+
+def match_parameter_values(executor_param: str, request_param: str) -> bool:
+    """Сравнивает параметры исполнителя и заявки с учетом типов данных"""
+    if not executor_param or not request_param:
+        return False
+    
+    # Определяем типы данных
+    executor_type = detect_data_type(executor_param)
+    request_type = detect_data_type(request_param)
+    
+    # Если типы не совпадают, проверяем совместимость
+    if executor_type != request_type:
+        # Числовые типы совместимы между собой
+        if {executor_type, request_type}.issubset({"integer", "float"}):
+            try:
+                float(executor_param)
+                float(request_param)
+                return abs(float(executor_param) - float(request_param)) < 0.001
+            except ValueError:
+                return False
+        
+        # Текстовые типы совместимы
+        if {executor_type, request_type}.issubset({"text", "string"}):
+            return executor_param.lower() == request_param.lower()
+        
+        # Растровые данные совместимы
+        if {executor_type, request_type}.issubset({"raster"}):
+            return executor_param.lower() == request_param.lower()
+        
+        return False
+    
+    # Если типы совпадают, сравниваем значения
+    if executor_type == "integer":
+        return int(executor_param) == int(request_param)
+    elif executor_type == "float":
+        return abs(float(executor_param) - float(request_param)) < 0.001
+    elif executor_type == "date":
+        return executor_param == request_param
+    else:  # text, string, raster
+        return executor_param.lower() == request_param.lower()
+
 
 app = FastAPI(
     title="Request Distribution System",
@@ -31,8 +112,7 @@ class RequestBulkCreate(BaseModel):
 
 class ExecutorCreate(BaseModel):
     name: str
-    city: Optional[str] = None
-    data_type: Optional[str] = None
+    parameters: Optional[Dict[str, Any]] = None
 
 
 class ExecutorUpdate(BaseModel):
@@ -57,6 +137,13 @@ class ExecutorResponse(BaseModel):
     total_assigned: int
     is_active: bool
     created_at: datetime
+
+class RequestComplete(BaseModel):
+    result: str = "Completed"
+
+class BatchCompleteRequest(BaseModel):
+    request_ids: List[int]
+    result: str = "Batch completed"
 
 
 @app.on_event("startup")
@@ -183,12 +270,8 @@ async def create_executor(
             detail="Исполнитель с таким именем уже существует"
         )
     
-    # Создаем параметры на основе переданных данных
-    parameters = {}
-    if executor_data.city:
-        parameters["city"] = executor_data.city
-    if executor_data.data_type:
-        parameters["data_type"] = executor_data.data_type
+    # Используем переданные параметры или пустой словарь
+    parameters = executor_data.parameters or {}
     
     db_executor = Executor(
         name=executor_data.name,
@@ -352,6 +435,125 @@ async def clear_all_requests(session: AsyncSession = Depends(get_db)):
     except Exception as e:
         await session.rollback()
         raise HTTPException(status_code=500, detail=f"Ошибка удаления заявок: {str(e)}")
+
+
+@app.post("/executors/{executor_id}/get-batch-requests")
+async def get_batch_requests(
+    executor_id: int,
+    batch_size: int = 5,
+    grouping_param: str = "city",  # city, data_type, или custom
+    db: AsyncSession = Depends(get_db)
+):
+    """Получить батч заявок для исполнителя с группировкой по параметру"""
+    try:
+        # Получаем исполнителя
+        result = await db.execute(
+            select(Executor).where(Executor.id == executor_id, Executor.is_active == True)
+        )
+        executor = result.scalar_one_or_none()
+        
+        if not executor:
+            raise HTTPException(status_code=404, detail="Исполнитель не найден или неактивен")
+        
+        # Получаем параметры исполнителя
+        executor_params = executor.parameters or {}
+        executor_city = executor_params.get("city")
+        executor_data_type = executor_params.get("data_type")
+        
+        # Строим запрос для получения заявок
+        query = select(Request).where(Request.status == "pending")
+        
+        # Пока что убираем фильтрацию по параметрам для упрощения
+        # В будущем можно добавить более сложную логику фильтрации
+        
+        # Простая группировка по ID
+        query = query.order_by(Request.id)
+        
+        # Ограничиваем количество заявок
+        query = query.limit(batch_size)
+        
+        result = await db.execute(query)
+        requests = result.scalars().all()
+        
+        if not requests:
+            return {"requests": [], "batch_size": 0, "message": "Нет доступных заявок для батча"}
+        
+        # Назначаем заявки исполнителю
+        assigned_requests = []
+        for request in requests:
+            request.status = "assigned"
+            request.assigned_to = executor_id
+            request.assigned_at = datetime.utcnow()
+            executor.total_assigned += 1
+            assigned_requests.append(request)
+        
+        await db.commit()
+        
+        # Обновляем объекты после коммита
+        for request in assigned_requests:
+            await db.refresh(request)
+        
+        return {
+            "requests": [
+                {
+                    "id": req.id,
+                    "parameters": req.parameters,
+                    "status": req.status,
+                    "assigned_to": req.assigned_to,
+                    "assigned_at": req.assigned_at,
+                    "created_at": req.created_at
+                }
+                for req in assigned_requests
+            ],
+            "batch_size": len(assigned_requests),
+            "executor_id": executor_id,
+            "grouping_param": grouping_param,
+            "message": f"Назначено {len(assigned_requests)} заявок батчем"
+        }
+        
+    except Exception as e:
+        await db.rollback()
+        raise HTTPException(status_code=500, detail=f"Ошибка получения батча заявок: {str(e)}")
+
+
+@app.post("/requests/batch-complete")
+async def batch_complete_requests(
+    request: BatchCompleteRequest,
+    db: AsyncSession = Depends(get_db)
+):
+    """Завершить несколько заявок батчем"""
+    try:
+        # Получаем заявки
+        result_query = await db.execute(
+            select(Request).where(
+                Request.id.in_(request.request_ids),
+                Request.status == "assigned"
+            )
+        )
+        requests = result_query.scalars().all()
+        
+        if not requests:
+            return {"message": "Нет заявок для завершения", "completed": 0}
+        
+        # Завершаем заявки
+        completed_count = 0
+        for req in requests:
+            req.status = "completed"
+            req.completed_at = datetime.utcnow()
+            req.result = request.result
+            completed_count += 1
+        
+        await db.commit()
+        
+        return {
+            "message": f"Завершено {completed_count} заявок батчем",
+            "completed": completed_count,
+            "request_ids": [req.id for req in requests]
+        }
+        
+    except Exception as e:
+        await db.rollback()
+        raise HTTPException(status_code=500, detail=f"Ошибка завершения батча заявок: {str(e)}")
 
 
 @app.get("/")
