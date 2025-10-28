@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException, UploadFile, File
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
 import asyncio
@@ -31,7 +31,8 @@ class RequestBulkCreate(BaseModel):
 
 class ExecutorCreate(BaseModel):
     name: str
-    parameters: Optional[Dict[str, Any]] = {}
+    city: Optional[str] = None
+    data_type: Optional[str] = None
 
 
 class ExecutorUpdate(BaseModel):
@@ -182,9 +183,16 @@ async def create_executor(
             detail="Исполнитель с таким именем уже существует"
         )
     
+    # Создаем параметры на основе переданных данных
+    parameters = {}
+    if executor_data.city:
+        parameters["city"] = executor_data.city
+    if executor_data.data_type:
+        parameters["data_type"] = executor_data.data_type
+    
     db_executor = Executor(
         name=executor_data.name,
-        parameters=executor_data.parameters or {}
+        parameters=parameters
     )
     session.add(db_executor)
     await session.commit()
@@ -247,6 +255,25 @@ async def update_executor(
     
     return executor
 
+
+@app.delete("/executors/{executor_id}")
+async def delete_executor(
+    executor_id: int,
+    session: AsyncSession = Depends(get_db)
+):
+    """Удалить исполнителя"""
+    result = await session.execute(
+        select(Executor).where(Executor.id == executor_id)
+    )
+    executor = result.scalar_one_or_none()
+    
+    if not executor:
+        raise HTTPException(status_code=404, detail="Исполнитель не найден")
+    
+    await session.delete(executor)
+    await session.commit()
+    
+    return {"success": True, "message": "Executor deleted"}
 
 
 @app.post("/executors/{executor_id}/get-next-request", response_model=Optional[RequestResponse])
@@ -311,6 +338,20 @@ async def upload_excel(
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Ошибка обработки файла: {str(e)}")
+
+
+@app.delete("/requests/clear")
+async def clear_all_requests(session: AsyncSession = Depends(get_db)):
+    """Удалить все заявки"""
+    try:
+        # Удаляем все заявки
+        await session.execute(delete(Request))
+        await session.commit()
+        
+        return {"message": "Все заявки удалены", "count": 0}
+    except Exception as e:
+        await session.rollback()
+        raise HTTPException(status_code=500, detail=f"Ошибка удаления заявок: {str(e)}")
 
 
 @app.get("/")

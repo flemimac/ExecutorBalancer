@@ -1,7 +1,4 @@
-"""
-Пример клиента для работы с системой распределения заявок
-Демонстрирует основные сценарии использования
-"""
+
 import asyncio
 import httpx
 import json
@@ -12,15 +9,8 @@ BASE_URL = "http://localhost:8000"
 
 
 async def example_workflow():
-    """Полный пример рабочего процесса"""
-    
     async with httpx.AsyncClient() as client:
         
-        print("="*60)
-        print("ПРИМЕР РАБОТЫ С СИСТЕМОЙ РАСПРЕДЕЛЕНИЯ ЗАЯВОК")
-        print("="*60)
-        
-        # 1. Создание исполнителей
         print("\n1. Создание исполнителей...")
         executors_data = [
             {"name": "Алексей Иванов", "parameters": {"skill": "senior", "region": "Moscow"}},
@@ -36,7 +26,6 @@ async def example_workflow():
                 executor_ids.append(executor['id'])
                 print(f"   [OK] Создан: {executor['name']} (ID: {executor['id']})")
         
-        # 2. Создание заявок
         print("\n2. Создание заявок...")
         requests_data = {
             "requests": [
@@ -57,7 +46,6 @@ async def example_workflow():
         if response.status_code == 200:
             print(f"   [OK] Создано {len(requests_data['requests'])} заявок")
         
-        # 3. Симуляция работы исполнителей
         print("\n3. Распределение и обработка заявок...")
         total_processed = 0
         
@@ -65,7 +53,6 @@ async def example_workflow():
             processed = 0
             
             while True:
-                # Получаем следующую заявку
                 response = await client.post(
                     f"{BASE_URL}/executors/{executor_id}/get-next-request"
                 )
@@ -73,11 +60,7 @@ async def example_workflow():
                 if response.status_code == 200 and response.json() is not None:
                     request = response.json()
                     print(f"   -> {executors_data[i]['name']} получил заявку #{request['id']}")
-                    
-                    # Симуляция обработки
                     await asyncio.sleep(0.5)
-                    
-                    # Завершаем заявку
                     await client.post(f"{BASE_URL}/requests/{request['id']}/complete")
                     processed += 1
                     total_processed += 1
@@ -86,7 +69,6 @@ async def example_workflow():
             
             print(f"   [OK] {executors_data[i]['name']} обработал {processed} заявок")
         
-        # 4. Добавление нового исполнителя в процессе
         print("\n4. Динамическое добавление нового исполнителя...")
         new_executor = {
             "name": "Иван Новиков",
@@ -98,7 +80,6 @@ async def example_workflow():
             new_executor_data = response.json()
             print(f"   [OK] Добавлен новый исполнитель: {new_executor_data['name']}")
             
-            # Новый исполнитель получает свою долю заявок
             new_processed = 0
             while True:
                 response = await client.post(
@@ -112,7 +93,6 @@ async def example_workflow():
                     break
             print(f"   [OK] {new_executor['name']} обработал {new_processed} заявок")
         
-        # 5. Получение статистики
         print("\n5. Статистика распределения...")
         response = await client.get(f"{BASE_URL}/stats")
         if response.status_code == 200:
@@ -133,23 +113,19 @@ async def example_workflow():
 
 
 async def quick_test():
-    """Быстрый тест системы"""
     async with httpx.AsyncClient() as client:
-        # Создаем исполнителя
         response = await client.post(
             f"{BASE_URL}/executors/",
             json={"name": "TestExecutor", "parameters": {}}
         )
         print(f"Создан исполнитель: {response.json()}")
         
-        # Создаем заявку
         response = await client.post(
             f"{BASE_URL}/requests/",
             json={"parameters": {"test": "data"}}
         )
         print(f"Создана заявка: {response.json()}")
         
-        # Получаем заявку
         response = await client.post(f"{BASE_URL}/executors/1/get-next-request")
         print(f"Получена заявка: {response.json()}")
 

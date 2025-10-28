@@ -19,13 +19,11 @@ AsyncSessionLocal = async_sessionmaker(
 
 
 async def init_db():
-    """Инициализация базы данных"""
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
 
 async def get_db():
-    """Получение сессии базы данных"""
     async with AsyncSessionLocal() as session:
         try:
             yield session

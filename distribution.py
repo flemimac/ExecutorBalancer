@@ -1,9 +1,11 @@
 from sqlalchemy import select, func, update
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import JSON
+from sqlalchemy.sql import cast
 from typing import List, Optional, Dict, Any
 from models import Executor, Request
 from datetime import datetime
-import math
+import json
 
 
 class DistributionEngine:
@@ -22,13 +24,49 @@ class DistributionEngine:
         if not executor:
             return None
         
-        result = await session.execute(
-            select(Request)
-            .where(Request.status == "pending")
-            .order_by(Request.id)
-            .limit(1)
-        )
-        request = result.scalar_one_or_none()
+        # Получаем параметры исполнителя
+        executor_params = executor.parameters or {}
+        executor_city = executor_params.get("city")
+        executor_data_type = executor_params.get("data_type")
+        
+        # Инициализируем переменную request
+        request = None
+        
+        # Если у исполнителя есть параметры, фильтруем заявки
+        if executor_city or executor_data_type:
+            # Получаем все заявки и фильтруем в Python
+            all_requests = await session.execute(
+                select(Request).where(Request.status == "pending")
+            )
+            all_requests = all_requests.scalars().all()
+            
+            # Фильтруем заявки по параметрам
+            matching_requests = []
+            for req in all_requests:
+                if req.parameters and 'parameters' in req.parameters:
+                    req_params = req.parameters['parameters']
+                    match = True
+                    
+                    if executor_city and req_params.get('city') != executor_city:
+                        match = False
+                    
+                    if executor_data_type and req_params.get('data_type') != executor_data_type:
+                        match = False
+                    
+                    if match:
+                        matching_requests.append(req)
+            
+            if matching_requests:
+                request = matching_requests[0]  # Берем первую подходящую
+            else:
+                request = None
+        
+        # Если не нашли подходящую заявку, берем любую
+        if not request:
+            result = await session.execute(
+                select(Request).where(Request.status == "pending").limit(1)
+            )
+            request = result.scalar_one_or_none()
         
         if request:
             request.status = "assigned"
@@ -130,14 +168,24 @@ class DistributionEngine:
             })
         
         if executor_stats and assigned_requests > 0:
-            avg_load = assigned_requests / len(executor_stats) if len(executor_stats) > 0 else 0
-            if avg_load > 0:
-                max_deviation = max(
-                    abs(stats["actual_count"] - avg_load) 
-                    for stats in executor_stats
-                )
-                error_percent = (max_deviation / avg_load * 100)
+            # Фильтруем исполнителей, которые реально работали (обработали хотя бы 1 заявку)
+            working_executors = [stats for stats in executor_stats if stats["actual_count"] > 0]
+            
+            if len(working_executors) >= 2:  # Нужно минимум 2 работающих исполнителя для сравнения
+                # Используем actual_count (текущие заявки) для расчета равномерности
+                loads = [stats["actual_count"] for stats in working_executors]
+                avg_load = sum(loads) / len(loads)
+                
+                if avg_load > 0:
+                    # Рассчитываем максимальное отклонение от среднего
+                    max_deviation = max(abs(load - avg_load) for load in loads)
+                    
+                    # Процент погрешности как максимальное отклонение от среднего
+                    error_percent = (max_deviation / avg_load * 100)
+                else:
+                    error_percent = 0
             else:
+                # Если работающих исполнителей меньше 2, погрешность = 0
                 error_percent = 0
         else:
             error_percent = 0
