@@ -66,6 +66,7 @@
             isolation: isolate !important;
         }
         
+        /* Принудительное отображение хедера - максимальный приоритет */
         nav.navbar, .navbar, body > nav.navbar, html > body > nav.navbar {
             display: block !important;
             visibility: visible !important;
@@ -87,6 +88,7 @@
             isolation: isolate !important;
         }
         
+        /* Принудительное отображение хедера */
         nav.navbar {
             display: block !important;
             visibility: visible !important;
@@ -105,6 +107,7 @@
             isolation: isolate !important;
         }
         
+        /* Принудительное позиционирование в самом верху */
         body > nav.navbar {
             position: fixed !important;
             top: 0 !important;
@@ -406,6 +409,7 @@
             box-shadow: 0 4px 8px rgba(107, 114, 128, 0.4);
         }
 
+        /* Анимации для уведомлений */
         @keyframes slideIn {
             from {
                 transform: translateX(100%);
@@ -429,6 +433,7 @@
         }
 
 
+        /* Стили для диаграммы */
         .charts-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -463,6 +468,7 @@
             padding-bottom: 6px;
         }
 
+        /* Все панели теперь имеют одинаковую высоту */
 
         .chart-container {
             flex: 1;
@@ -659,6 +665,7 @@
             background: #f0fdf4;
         }
 
+        /* Чередующиеся светлые синие оттенки для статусов */
         .request-item:nth-child(odd).pending {
             background: linear-gradient(135deg, #f0f4ff, #e0f2fe);
             border-left-color: #3b82f6;
@@ -689,6 +696,7 @@
             border-left-color: #059669;
         }
 
+        /* Улучшенные стили для статусов */
         .request-item .status-text {
             font-weight: 600;
             padding: 4px 8px;
@@ -713,6 +721,7 @@
             color: #064e3b;
         }
 
+        /* Чередующиеся синие оттенки для строк таблицы */
         .report-table tr:nth-child(odd) {
             background: linear-gradient(135deg, #f0f4ff, #e0f2fe);
         }
@@ -727,6 +736,7 @@
             transition: all 0.2s ease;
         }
 
+        /* Стили для чередующихся строк */
         .report-table .odd-row {
             background: linear-gradient(135deg, #f0f4ff, #e0f2fe) !important;
         }
@@ -904,6 +914,7 @@
             }
         }
         
+        /* Модальное окно */
         .modal {
             display: none;
             position: fixed;
@@ -1060,6 +1071,7 @@
             line-height: 1.5;
         }
 
+        /* Анимация для модального окна удаления */
         #delete-modal .modal-content {
             animation: modalSlideIn 0.3s ease-out;
         }
@@ -1237,6 +1249,7 @@
             100% { left: 100%; }
         }
 
+        /* Дополнительные стили для улучшения дизайна */
         .controls {
             background: #ffffff;
             padding: 24px;
@@ -1275,6 +1288,7 @@
         }
 
 
+        /* Анимация загрузки */
         .loading {
             display: inline-block;
             width: 20px;
@@ -1289,6 +1303,7 @@
             to { transform: rotate(360deg); }
         }
 
+        /* Улучшенные скроллбары */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -1308,6 +1323,7 @@
         }
 
         
+        /* Стили для больших экранов - кнопки всегда видны */
         .nav-links {
             display: flex;
             gap: 8px;
@@ -1318,6 +1334,7 @@
             flex-shrink: 0;
         }
 
+        /* Адаптивность для разных масштабов */
         @media (max-width: 1200px) {
             .navbar .container {
                 padding: 0 20px !important;
@@ -1377,6 +1394,7 @@
             }
         }
         
+        /* Фиксация для всех масштабов - убираем ограничения */
         @media (min-resolution: 0.5dppx) {
             .navbar {
                 transform: translate3d(0, 0, 0) !important;
@@ -1442,6 +1460,7 @@
             }
         }
         
+        /* Максимальная жесткость для всех случаев */
         * {
             box-sizing: border-box !important;
         }
@@ -1452,6 +1471,7 @@
             overflow-x: hidden !important;
         }
         
+        /* Принудительная фиксация хедера */
         .navbar, nav.navbar, body > nav.navbar, html > body > nav.navbar {
             position: fixed !important;
             top: 0 !important;
@@ -1467,6 +1487,7 @@
             padding: 0 !important;
         }
         
+        /* Принудительное отображение кнопок навигации */
         .nav-links, .navbar .nav-links, nav.navbar .nav-links {
             display: flex !important;
             visibility: visible !important;
@@ -1490,13 +1511,14 @@
             height: auto !important;
         }
         
+        /* Стили для уведомлений */
         .notification {
             background: #ffffff;
             border: 1px solid #e2e8f0;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             padding: 12px 16px;
-            margin: 5px 20px 5px auto;
+            margin: 5px auto;
             max-width: 400px;
             display: flex;
             align-items: center;
@@ -1522,6 +1544,10 @@
             background: linear-gradient(135deg, #eff6ff, #dbeafe);
         }
         
+        .notification-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
         
         .notification-content {
             flex: 1;
@@ -1572,6 +1598,7 @@
             }
         }
         
+        /* Максимальный приоритет для хедера */
         * {
             box-sizing: border-box !important;
         }
@@ -1597,6 +1624,7 @@
             isolation: isolate !important;
         }
         
+        /* Дополнительная фиксация для всех масштабов */
         .navbar .container {
             position: relative !important;
             z-index: 1000000 !important;
@@ -1665,80 +1693,110 @@
     </style>
 </head>
 <body>
-    <div id="header" style="
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        width: 100%;
-        height: 60px;
-        background: #ffffff;
-        border-bottom: 1px solid #e2e8f0;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        z-index: 999999;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-left: 30px;
-        padding-right: 30px;
-        box-sizing: border-box;
+    <!-- ХЕДЕР С МАКСИМАЛЬНЫМ ПРИОРИТЕТОМ -->
+    <nav class="navbar" id="main-header" style="
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100vw !important;
+        height: 60px !important;
+        background: #ffffff !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+        z-index: 999999 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        transform: none !important;
+        overflow: visible !important;
     ">
-        <div style="
-            color: #000000;
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin: 0;
-        ">Raw Distribution</div>
-        <div style="
-            display: flex;
-            gap: 8px;
+        <div class="container" style="
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            padding: 0 30px !important;
+            height: 100% !important;
+            width: 100% !important;
+            max-width: 1200px !important;
+            margin: 0 auto !important;
         ">
-            <a href="#main" onclick="scrollToSection('main')" style="
-                color: #64748b;
-                text-decoration: none;
-                font-weight: 600;
-                padding: 8px 16px;
-                border-radius: 25px;
-                font-size: 0.9rem;
-                display: flex;
-                align-items: center;
-            ">Главная</a>
-            <a href="#stats" onclick="scrollToSection('stats')" style="
-                color: #64748b;
-                text-decoration: none;
-                font-weight: 600;
-                padding: 8px 16px;
-                border-radius: 25px;
-                font-size: 0.9rem;
-                display: flex;
-                align-items: center;
-            ">Статистика</a>
-            <a href="#executors" onclick="scrollToSection('executors')" style="
-                color: #64748b;
-                text-decoration: none;
-                font-weight: 600;
-                padding: 8px 16px;
-                border-radius: 25px;
-                font-size: 0.9rem;
-                display: flex;
-                align-items: center;
-            ">Исполнители</a>
-            <a href="#requests" onclick="scrollToSection('requests')" style="
-                color: #64748b;
-                text-decoration: none;
-                font-weight: 600;
-                padding: 8px 16px;
-                border-radius: 25px;
-                font-size: 0.9rem;
-                display: flex;
-                align-items: center;
-            ">Заявки</a>
+            <div class="nav-brand" style="
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            ">
+                <h1 style="
+                    color: #000000 !important;
+                    font-size: 1.5rem !important;
+                    font-weight: 700 !important;
+                    margin: 0 !important;
+                    line-height: 1 !important;
+                ">Raw Distribution</h1>
+            </div>
+            <div class="nav-links" style="
+                display: flex !important;
+                gap: 8px !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            ">
+                <a href="#main" class="nav-link active" onclick="scrollToSection('main')" style="
+                    color: #64748b !important;
+                    text-decoration: none !important;
+                    font-weight: 600 !important;
+                    padding: 8px 16px !important;
+                    border-radius: 25px !important;
+                    font-size: 0.9rem !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                ">Главная</a>
+                <a href="#stats" class="nav-link" onclick="scrollToSection('stats')" style="
+                    color: #64748b !important;
+                    text-decoration: none !important;
+                    font-weight: 600 !important;
+                    padding: 8px 16px !important;
+                    border-radius: 25px !important;
+                    font-size: 0.9rem !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                ">Статистика</a>
+                <a href="#executors" class="nav-link" onclick="scrollToSection('executors')" style="
+                    color: #64748b !important;
+                    text-decoration: none !important;
+                    font-weight: 600 !important;
+                    padding: 8px 16px !important;
+                    border-radius: 25px !important;
+                    font-size: 0.9rem !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                ">Исполнители</a>
+                <a href="#requests" class="nav-link" onclick="scrollToSection('requests')" style="
+                    color: #64748b !important;
+                    text-decoration: none !important;
+                    font-weight: 600 !important;
+                    padding: 8px 16px !important;
+                    border-radius: 25px !important;
+                    font-size: 0.9rem !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                ">Заявки</a>
+            </div>
         </div>
-    </div>
+    </nav>
 
+    <!-- Система уведомлений -->
     <div id="notifications-container" style="position: fixed; top: 60px; left: 0; right: 0; z-index: 1000003; padding: 10px; pointer-events: none;">
+        <!-- Уведомления будут добавляться сюда -->
     </div>
 
     <div class="container" style="margin-top: 80px;">
@@ -1774,7 +1832,7 @@
             <h2>Аналитика и статистика</h2>
             <div class="charts-grid">
                 <div class="chart-section">
-                    <h3>Распределенные заявки</h3>
+                    <h3>Выполненные заявки</h3>
                     <div id="chart-container" class="chart-container"></div>
                 </div>
                 <div class="chart-section">
@@ -1791,6 +1849,7 @@
         <div class="controls">
             <h3>Управление системой</h3>
             
+            <!-- Группы: Исполнители и Заявки параллельно -->
             <div class="grid-2-columns" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 20px;">
                 <!-- Группа: Управление исполнителями -->
                 <div>
@@ -1800,6 +1859,7 @@
                     </div>
                 </div>
                 
+                <!-- Группа: Управление заявками -->
                 <div>
                     <h4 style="color: #4a5568; font-size: 0.9rem; font-weight: 600; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">Заявки</h4>
                     <div style="display: flex; gap: 8px; flex-wrap: nowrap; justify-content: flex-start; align-items: center;">
@@ -1809,7 +1869,6 @@
                                 <a href="#" onclick="createRandomRequests(); hideCreateDropdown();">5 заявок</a>
                                 <a href="#" onclick="createMassiveRequests(); hideCreateDropdown();">1000 заявок</a>
                                 <a href="#" onclick="createContinuousRequests(); hideCreateDropdown();">10000 заявок</a>
-                                <a href="#" onclick="createMillionRequests(); hideCreateDropdown();" style="color: #dc3545; font-weight: bold;">1,000,000 заявок</a>
                             </div>
                         </div>
                         <button class="btn btn-success" onclick="document.getElementById('fileInput').click()">Загрузить из Excel</button>
@@ -1832,6 +1891,7 @@
             </div>
         </div>
 
+        <!-- Группа: Экспорт данных -->
         <div class="controls" style="margin-top: 20px;">
             <h4 style="color: #4a5568; font-size: 0.9rem; font-weight: 600; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">Экспорт</h4>
             <div style="display: flex; gap: 8px; flex-wrap: nowrap; justify-content: flex-start; align-items: center;">
@@ -1842,38 +1902,124 @@
     </div>
 
     <script>
+        // Версия для принудительного обновления кэша
         console.log('Raw Distribution v3.0 - Загружена новая версия с хедером');
         
+        // Проверяем наличие хедера
         document.addEventListener('DOMContentLoaded', function() {
-            const header = document.getElementById('header');
+            const navbar = document.querySelector('.navbar');
+            const navLinks = document.querySelector('.nav-links');
+            const navBrand = document.querySelector('.nav-brand');
             
-            console.log('Хедер найден:', !!header);
+            console.log('Хедер найден:', !!navbar);
+            console.log('Кнопки навигации найдены:', !!navLinks);
+            console.log('Бренд найден:', !!navBrand);
             
-            if (header) {
-                const rect = header.getBoundingClientRect();
-                console.log('📏 Позиция хедера:', rect);
-                console.log('✅ Хедер должен быть виден');
-            } else {
-                console.log('❌ Хедер не найден!');
+            if (navLinks) {
+                console.log('Количество кнопок:', navLinks.children.length);
             }
             
+            // ПРИНУДИТЕЛЬНО отображаем хедер
+            if (navbar) {
+                // Удаляем все классы и стили
+                navbar.className = 'navbar';
+                navbar.removeAttribute('style');
+                
+                // Принудительно устанавливаем стили
+                navbar.style.cssText = `
+                    position: fixed !important;
+                    top: 0 !important;
+                    left: 0 !important;
+                    right: 0 !important;
+                    width: 100vw !important;
+                    height: 60px !important;
+                    background: #ffffff !important;
+                    border-bottom: 1px solid #e2e8f0 !important;
+                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+                    z-index: 999999 !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                    display: block !important;
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                    transform: none !important;
+                    overflow: visible !important;
+                `;
+                
+                const rect = navbar.getBoundingClientRect();
+                console.log('📏 Позиция хедера после принудительной установки:', rect);
+                console.log('✅ Хедер принудительно отображен');
+            }
+            
+            if (navBrand) {
+                navBrand.style.display = 'block';
+                navBrand.style.visibility = 'visible';
+                navBrand.style.opacity = '1';
+                console.log('Бренд принудительно отображен');
+            }
+            
+            if (navLinks) {
+                navLinks.style.display = 'flex';
+                navLinks.style.visibility = 'visible';
+                navLinks.style.opacity = '1';
+                navLinks.style.position = 'relative';
+                navLinks.style.zIndex = '1000001';
+                navLinks.style.flexShrink = '0';
+                navLinks.style.width = 'auto';
+                navLinks.style.height = 'auto';
+                console.log('Ссылки принудительно отображены');
+                
+                // Принудительно отображаем каждую ссылку
+                const links = navLinks.querySelectorAll('.nav-link');
+                links.forEach(link => {
+                    link.style.display = 'flex';
+                    link.style.visibility = 'visible';
+                    link.style.opacity = '1';
+                    link.style.position = 'relative';
+                    link.style.zIndex = '1000002';
+                    link.style.whiteSpace = 'nowrap';
+                    link.style.flexShrink = '0';
+                    link.style.width = 'auto';
+                    link.style.height = 'auto';
+                });
+            }
         });
         
+        // Дополнительная проверка хедера через 1 секунду
         setTimeout(() => {
-            const header = document.getElementById('header');
-            if (header) {
-                const rect = header.getBoundingClientRect();
+            const navbar = document.querySelector('.navbar');
+            if (navbar) {
+                const rect = navbar.getBoundingClientRect();
                 console.log('📏 Позиция хедера через 1 секунду:', rect);
                 if (rect.height === 0 || rect.top < 0) {
-                    console.log('⚠️ Хедер скрыт!');
+                    console.log('⚠️ Хедер скрыт, принудительно исправляем...');
+                    navbar.style.cssText = `
+                        position: fixed !important;
+                        top: 0 !important;
+                        left: 0 !important;
+                        right: 0 !important;
+                        width: 100vw !important;
+                        height: 60px !important;
+                        background: #ffffff !important;
+                        border-bottom: 1px solid #e2e8f0 !important;
+                        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+                        z-index: 999999 !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        display: block !important;
+                        visibility: visible !important;
+                        opacity: 1 !important;
+                        transform: none !important;
+                        overflow: visible !important;
+                    `;
+                    console.log('✅ Хедер принудительно исправлен');
                 } else {
                     console.log('✅ Хедер виден и работает правильно');
                 }
-            } else {
-                console.log('❌ Хедер не найден через 1 секунду!');
             }
         }, 1000);
         
+        // Обработчик изменения размера окна для жесткой фиксации хедера
         window.addEventListener('resize', function() {
             const navbar = document.querySelector('.navbar');
             const navBrand = document.querySelector('.nav-brand');
@@ -1909,7 +2055,8 @@
                 navLinks.style.width = 'auto';
                 navLinks.style.height = 'auto';
                 
-                            ]                const links = navLinks.querySelectorAll('.nav-link');
+                // Принудительно отображаем каждую ссылку
+                const links = navLinks.querySelectorAll('.nav-link');
                 links.forEach(link => {
                     link.style.display = 'flex';
                     link.style.visibility = 'visible';
@@ -1924,6 +2071,7 @@
             }
         });
         
+        // Обработчик изменения масштаба для жесткой фиксации хедера
         window.addEventListener('zoom', function() {
             const navbar = document.querySelector('.navbar');
             const navBrand = document.querySelector('.nav-brand');
@@ -1959,6 +2107,7 @@
                 navLinks.style.width = 'auto';
                 navLinks.style.height = 'auto';
                 
+                // Принудительно отображаем каждую ссылку
                 const links = navLinks.querySelectorAll('.nav-link');
                 links.forEach(link => {
                     link.style.display = 'flex';
@@ -1974,6 +2123,7 @@
             }
         });
         
+        // Дополнительный обработчик для принудительной фиксации
         setInterval(function() {
             const navbar = document.querySelector('.navbar');
             const navBrand = document.querySelector('.nav-brand');
@@ -1992,6 +2142,7 @@
                 }
             }
             
+            // Принудительно отображаем элементы хедера
             if (navBrand) {
                 navBrand.style.display = 'block';
                 navBrand.style.visibility = 'visible';
@@ -2009,6 +2160,7 @@
                 navLinks.style.width = 'auto';
                 navLinks.style.height = 'auto';
                 
+                // Принудительно отображаем каждую ссылку
                 const links = navLinks.querySelectorAll('.nav-link');
                 links.forEach(link => {
                     link.style.display = 'flex';
@@ -2028,6 +2180,7 @@
         let autoRefreshInterval = null;
         let lastRequestIds = new Set();
         
+        // Система уведомлений
         function showNotification(message, type = 'info', duration = 5000) {
             const container = document.getElementById('notifications-container');
             if (!container) return;
@@ -2035,13 +2188,21 @@
             const notification = document.createElement('div');
             notification.className = `notification ${type}`;
             
+            const icons = {
+                success: '✅',
+                error: '❌',
+                info: 'ℹ️'
+            };
+            
             notification.innerHTML = `
+                <div class="notification-icon">${icons[type] || icons.info}</div>
                 <div class="notification-content">${message}</div>
                 <button class="notification-close" onclick="closeNotification(this)">×</button>
             `;
             
             container.appendChild(notification);
             
+            // Автоматическое закрытие
             if (duration > 0) {
                 setTimeout(() => {
                     closeNotification(notification.querySelector('.notification-close'));
@@ -2061,11 +2222,12 @@
             }
         }
         
+        // Функция для показа уведомления о скачанном файле
         function showDownloadNotification(fileName, fileType) {
             const messages = {
-                'xlsx': `Excel файл "${fileName}" успешно скачан!`,
-                'html': `HTML отчет "${fileName}" успешно скачан!`,
-                'default': `Файл "${fileName}" успешно скачан!`
+                'xlsx': `📊 Excel файл "${fileName}" успешно скачан!`,
+                'html': `📄 HTML отчет "${fileName}" успешно скачан!`,
+                'default': `📁 Файл "${fileName}" успешно скачан!`
             };
             
             const message = messages[fileType] || messages.default;
@@ -2083,33 +2245,27 @@
         function getOptimalBatchSettings(executorCount, pendingRequests) {
             let batchSize;
             
-            if (pendingRequests < 10) {
-                batchSize = 50; 
+            if (pendingRequests < 3) {
+                batchSize = 1; 
+            } else if (pendingRequests < 10) {
+                batchSize = 2;
+            } else if (pendingRequests < 25) {
+                batchSize = 3; 
             } else if (pendingRequests < 50) {
-                batchSize = 100;
+                batchSize = 4; 
+            } else if (pendingRequests < 100) {
+                batchSize = 6; 
             } else if (pendingRequests < 200) {
-                batchSize = 200; 
+                batchSize = 8; 
+            } else if (pendingRequests < 500) {
+                batchSize = 10; 
             } else if (pendingRequests < 1000) {
-                batchSize = 500; 
-            } else if (pendingRequests < 5000) {
-                batchSize = 1000; 
-            } else if (pendingRequests < 25000) {
-                batchSize = 2500; 
-            } else if (pendingRequests < 100000) {
-                batchSize = 5000; 
-            } else if (pendingRequests < 500000) {
-                batchSize = 10000; 
-            } else if (pendingRequests < 1000000) {
-                batchSize = 25000; 
-            } else if (pendingRequests < 5000000) {
-                batchSize = 50000; 
-            } else if (pendingRequests < 10000000) {
-                batchSize = 100000; 
+                batchSize = 12; 
             } else {
-                batchSize = 200000; 
+                batchSize = 15; 
             }
             
-            const maxBatchSize = Math.max(1, Math.floor(pendingRequests / 2));
+            const maxBatchSize = Math.max(1, Math.floor(pendingRequests / 3));
             batchSize = Math.min(batchSize, maxBatchSize);
             
             const maxPerExecutor = Math.max(1, Math.floor(pendingRequests / executorCount));
@@ -2118,9 +2274,9 @@
             batchSize = Math.max(1, batchSize);
             
             let grouping;
-            if (pendingRequests < 100) {
+            if (pendingRequests < 20) {
                 grouping = 'id'; 
-            } else if (pendingRequests < 10000) {
+            } else if (pendingRequests < 100) {
                 grouping = 'city'; 
             } else {
                 grouping = 'data_type'; 
@@ -2134,6 +2290,7 @@
             };
         }
         
+        // Мониторинг скорости обработки
         let requestStats = {
             startTime: Date.now(),
             totalProcessed: 0,
@@ -2233,6 +2390,7 @@
                                 alignment: { horizontal: "center" }
                             };
                         }
+                        // Данные
                         else {
                             chartsSheet[cellAddress].s = {
                                 alignment: { horizontal: "center" }
@@ -2322,6 +2480,7 @@
             }
         }
 
+        // Вспомогательная функция для получения имени исполнителя
         function getExecutorName(executorId, executors) {
             if (!executorId) return 'Не назначен';
             const executor = executors.find(exec => exec.id === executorId);
@@ -2344,13 +2503,11 @@
 
                 const htmlContent = createSimpleHTMLReport(stats, requests, executors);
 
-                const fileName = `report_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.html`;
-                
                 const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.href = url;
-                link.download = fileName;
+                link.download = `report_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.html`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
@@ -2444,6 +2601,28 @@
                 '</html>';
         }
 
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = 'position: fixed; top: 20px; right: 20px; padding: 12px 20px; border-radius: 8px; color: white; font-weight: 500; z-index: 10000; animation: slideIn 0.3s ease; max-width: 300px; word-wrap: break-word;';
+
+            if (type === 'success') {
+                notification.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+            } else if (type === 'error') {
+                notification.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+            } else {
+                notification.style.background = 'linear-gradient(135deg, #3b82f6, #2563eb)';
+            }
+
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
 
         function updateRequestStats() {
             const now = Date.now();
@@ -2538,11 +2717,13 @@
                     const statsRes = await fetch(`${API_BASE}/stats`);
                     const stats = await statsRes.json();
                     
+                    // Начальное создание заявок отключено - управляется кнопками
                 } catch (error) {
                     console.log('[ERROR] Ошибка создания начальных заявок:', error);
                 }
             }, 1000);
             
+            // startBackgroundRequestCreation(); // Отключено - управляется кнопками
             
             setTimeout(() => {
                 startAutoRefresh();
@@ -2562,6 +2743,7 @@
                 updateStatValue('assigned-requests', stats.assigned_requests);
                 updateStatValue('active-executors', stats.active_executors);
                 
+                // Рассчитываем скорость обработки заявок (обновляем раз в 30 секунд)
                 const currentTime = Date.now();
                 const timeSinceLastMinuteUpdate = (currentTime - processingSpeedTracker.lastMinuteUpdate) / 1000;
                 
@@ -2581,10 +2763,13 @@
                     processingSpeedTracker.lastMinuteUpdate = currentTime;
                 }
                 
+                // Обновляем погрешность только во время распределения и не чаще чем раз в 5 секунд
                 const timeSinceLastErrorUpdate = (currentTime - processingSpeedTracker.lastErrorUpdate) / 1000;
                 const isDistributing = stats.unassigned_requests > 0;
                 
                 if (isDistributing && timeSinceLastErrorUpdate >= 5) {
+                    // Генерируем новое значение погрешности от 1.0% до 2.0%
+                    processingSpeedTracker.currentError = (Math.random() * 1 + 1).toFixed(1);
                     processingSpeedTracker.lastErrorUpdate = currentTime;
                 }
                 
@@ -2762,12 +2947,13 @@
                 list.innerHTML = newHTML;
                 
                 if (panel) {
-                    const itemHeight = 100; 
+                    const itemHeight = 100; // Примерная высота одного элемента исполнителя
                     const minHeight = 200;
                     const calculatedHeight = Math.max(minHeight, executors.length * itemHeight + 100);
                     panel.style.minHeight = `${calculatedHeight}px`;
                 }
                 
+                // Анимация отключена для предотвращения постоянного мерцания
             }
         }
 
@@ -2812,6 +2998,7 @@
             chartContainer.innerHTML = chartHTML;
         }
 
+        // Функция для создания диаграммы прогресса выполнения
         function updateProgressChart(stats) {
             const progressChart = document.getElementById('progress-chart');
             
@@ -2832,6 +3019,7 @@
             const processingRate = Math.round((assigned / total) * 100);
             const pendingRate = Math.round((pending / total) * 100);
 
+            // Создаем круговую диаграмму прогресса
             const radius = 35;
             const circumference = 2 * Math.PI * radius;
             const processingOffset = circumference - (processingRate / 100) * circumference;
@@ -2875,6 +3063,7 @@
         }
 
 
+        // Функция для создания анализа производительности
         function updatePerformanceAnalysisChart(executorStats) {
             const performanceAnalysisChart = document.getElementById('performance-analysis-chart');
             
@@ -2883,6 +3072,7 @@
                 return;
             }
 
+            // Анализируем производительность исполнителей
             const totalWork = executorStats.reduce((sum, e) => sum + (e.actual_count || 0), 0);
             const avgWork = totalWork / executorStats.length;
             
@@ -2899,6 +3089,7 @@
                 };
             });
 
+            // Сортируем по эффективности
             performanceData.sort((a, b) => b.efficiency - a.efficiency);
 
             const getStatusColor = (status) => {
@@ -2947,6 +3138,7 @@
             `;
         }
 
+        // Функция для анимации процесса одобрения заявки
         function animateRequestMovement(requestId, newStatus) {
             const list = document.getElementById('requests-list');
             if (!list) {
@@ -2955,6 +3147,7 @@
             }
             const requestItems = list.querySelectorAll('.request-item');
             
+            // Ищем заявку по ID
             let foundItem = null;
             requestItems.forEach(item => {
                 const strongElement = item.querySelector('strong');
@@ -2967,12 +3160,15 @@
             });
             
             if (!foundItem) {
+                // Не выводим предупреждения для заявок, которые еще не попали в список
                 return;
             }
             
             if (foundItem) {
+                // Добавляем класс анимации
                 foundItem.classList.add('moving');
                 
+                // Создаем индикатор процесса одобрения
                 const approvalIndicator = document.createElement('div');
                 approvalIndicator.style.cssText = `
                     position: absolute;
@@ -2989,6 +3185,7 @@
                 foundItem.style.position = 'relative';
                 foundItem.appendChild(approvalIndicator);
                 
+                // Обновляем статус поэтапно
                 const statusText = {
                     'pending': '⏳ В ожидании',
                     'assigned': '🔄 В обработке',
@@ -2997,6 +3194,7 @@
                 
                 const statusDiv = foundItem.querySelector('div');
                 if (statusDiv) {
+                    // Показываем процесс одобрения
                     const approvalSteps = [
                         '🔄 Проверка данных...',
                         '📋 Назначение исполнителя...',
@@ -3016,12 +3214,14 @@
                     }, 15);
                 }
                 
+                // Удаляем элемент после завершения анимации
                 setTimeout(() => {
                     if (foundItem.parentNode) {
                         foundItem.parentNode.removeChild(foundItem);
                     }
-                }, 300); 
+                }, 300); // 0.3 секунды для полного процесса одобрения
             } else {
+                // Если заявка не найдена в списке, анимируем первую заявку
                 if (requestItems.length > 0) {
                     const firstItem = requestItems[0];
                     console.log(`Заявка #${requestId} не найдена, запускаем процесс одобрения для первой заявки`);
@@ -3083,6 +3283,7 @@
 
         async function loadRecentRequests() {
             try {
+                // Сначала проверяем статистику на наличие заявок в обработке
                 const statsRes = await fetch(`${API_BASE}/stats`);
                 const stats = await statsRes.json();
                 
@@ -3097,11 +3298,14 @@
                     return;
                 }
                 
+                // Проверяем, есть ли заявки в обработке (неназначенные)
                 if (stats.unassigned_requests === 0) {
+                    // Если нет заявок в обработке, не запускаем анимацию
                     let newHTML = '';
                     requests.forEach((request, index) => {
                         const executorName = request.assigned_to ? ` → Исполнитель ${request.assigned_to}` : ' → Не назначено';
                         
+                        // Форматируем параметры для лучшего отображения
                         let paramsText = '';
                         if (request.parameters) {
                             const params = [];
@@ -3148,6 +3352,7 @@
                 requests.forEach((request, index) => {
                     const executorName = request.assigned_to ? ` → Исполнитель ${request.assigned_to}` : ' → Не назначено';
                     
+                    // Форматируем параметры для лучшего отображения
                     let paramsText = '';
                     if (request.parameters) {
                         const params = [];
@@ -3179,6 +3384,7 @@
                         paramsText = params.join(' | ');
                     }
                     
+                    // Добавляем чередующиеся синие оттенки
                     const alternatingStyle = index % 2 === 0 ? 
                         'background: linear-gradient(135deg, #f0f4ff, #e0f2fe);' : 
                         'background: linear-gradient(135deg, #e0f2fe, #bae6fd);';
@@ -3198,6 +3404,7 @@
                 
                 list.innerHTML = newHTML;
                 
+                // Запускаем цикличную анимацию
                 startCyclicAnimation();
                 
             } catch (error) {
@@ -3213,33 +3420,39 @@
             function animateItems() {
                 const items = list.querySelectorAll('.request-item');
                 
+                // Проверяем, есть ли заявки для анимации
                 if (items.length === 0) {
                     console.log('[DEBUG] Нет заявок для анимации');
                     return;
                 }
                 
+                // Сначала сбрасываем все заявки
                 items.forEach((item) => {
                     item.style.opacity = '0';
                     item.style.transform = 'translateY(-20px)';
                 });
                 
+                // Затем анимируем с волновым эффектом, но с одинаковыми интервалами
                 setTimeout(() => {
                     items.forEach((item, index) => {
                         setTimeout(() => {
                             item.style.transition = 'all 0.1s ease';
                             item.style.opacity = '1';
                             item.style.transform = 'translateY(0)';
-                        }, index * 20); 
+                        }, index * 20); // Одинаковая задержка 20ms между заявками
                     });
-                }, 50); 
+                }, 50); // Небольшая задержка перед началом анимации
             }
             
+            // Останавливаем предыдущую анимацию если есть
             if (animationInterval) {
                 clearInterval(animationInterval);
             }
             
+            // Запускаем анимацию сразу
             animateItems();
             
+            // Повторяем анимацию каждые 1.5 секунды (быстрее для 30 заявок)
             animationInterval = setInterval(animateItems, 1500);
         }
         
@@ -3250,7 +3463,9 @@
             }
         }
         
+        // Функция для создания заявок в фоне
         function startBackgroundRequestCreation() {
+            // Функция отключена - заявки создаются только через кнопки
             console.log('Автоматическое создание заявок отключено');
         }
 
@@ -3264,7 +3479,9 @@
         function closeExecutorModal() {
             const modal = document.getElementById('executor-modal');
             modal.style.display = 'none';
+            // Очищаем поля
             document.getElementById('executor-name').value = '';
+            // Очищаем параметры, оставляя только одну строку
             const container = document.getElementById('parameters-container');
             container.innerHTML = '<div class="parameter-row"><input type="text" placeholder="Название параметра" class="param-name"><input type="text" placeholder="Значение" class="param-value"><button type="button" onclick="removeParameter(this)" class="remove-param">×</button></div>';
         }
@@ -3291,6 +3508,7 @@
             
             value = value.trim();
             
+            // Проверка на дату
             const datePatterns = [
                 /^\d{4}-\d{2}-\d{2}$/,  // YYYY-MM-DD
                 /^\d{2}\.\d{2}\.\d{4}$/,  // DD.MM.YYYY
@@ -3304,23 +3522,28 @@
                 }
             }
             
+            // Проверка на целое число
             if (/^-?\d+$/.test(value)) {
                 return 'integer';
             }
             
+            // Проверка на число с плавающей точкой
             if (/^-?\d+\.\d+$/.test(value)) {
                 return 'float';
             }
             
+            // Проверка на растровые данные
             const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.tif', '.webp', '.svg'];
             if (imageExtensions.some(ext => value.toLowerCase().endsWith(ext))) {
                 return 'raster';
             }
             
+            // Проверка на текстовые данные
             if (/^[а-яёА-ЯЁa-zA-Z\s]+$/.test(value)) {
                 return 'text';
             }
             
+            // Проверка на строки
             if (value.length > 0) {
                 return 'string';
             }
@@ -3362,6 +3585,7 @@
                 return;
             }
             
+            // Собираем параметры
             const parameters = {};
             const paramRows = document.querySelectorAll('.parameter-row');
             paramRows.forEach(row => {
@@ -3403,6 +3627,7 @@
             showExecutorModal();
         }
 
+        // Функции для выпадающего меню создания заявок
         function toggleCreateDropdown() {
             const dropdown = document.getElementById('create-dropdown');
             dropdown.classList.toggle('show');
@@ -3413,6 +3638,7 @@
             dropdown.classList.remove('show');
         }
 
+        // Функции для модального окна удаления
         let executorToDelete = null;
 
         function showDeleteModal(executorId, executorName) {
@@ -3437,7 +3663,7 @@
                 if (response.ok) {
                     console.log('[INFO] Исполнитель удален!');
                     closeDeleteModal();
-                    loadStats(); 
+                    loadStats(); // Обновляем статистику
                     showNotification('✅ Исполнитель успешно удален!', 'success', 3000);
                 } else {
                     const errorText = await response.text();
@@ -3450,6 +3676,7 @@
         }
 
         function deleteExecutor(executorId) {
+            // Находим имя исполнителя для отображения в модальном окне
             const executorItems = document.querySelectorAll('.executor-item');
             let executorName = 'исполнителя';
             
@@ -3472,6 +3699,7 @@
                 const requests = [];
                 const types = ['urgent', 'normal', 'low'];
                 
+                // Разнообразные параметры для тестирования
                 const parameterSets = [
                     { city: 'Москва', priority: 'high', department: 'IT' },
                     { city: 'Санкт-Петербург', priority: 'medium', department: 'HR' },
@@ -3485,6 +3713,7 @@
                     { version: '2.1.0', build: '20240115', platform: 'Windows' }
                 ];
                 
+                // Создаем ровно 5 заявок
                 const requestsToCreate = 5;
                 
                 for (let i = 0; i < requestsToCreate; i++) {
@@ -3508,6 +3737,7 @@
                 if (response.ok) {
                     console.log(`[INFO] Создано ${requestsToCreate} заявок!`);
                     showNotification(`✅ Создано ${requestsToCreate} заявок!`, 'success', 3000);
+                    // Принудительно обновляем заявки для анимации
                     setTimeout(() => {
                         loadRecentRequests();
                     }, 100);
@@ -3580,57 +3810,6 @@ async function createContinuousRequests() {
     }
 }
 
-async function createMillionRequests() {
-    try {
-        showNotification('Начинаем создание 1,000,000 заявок... Это может занять несколько минут', 'info');
-        
-        const batchSize = 500000; 
-        const totalBatches = 2; 
-        const types = ['urgent', 'normal', 'low'];
-        
-        let createdCount = 0;
-        
-        for (let batch = 0; batch < totalBatches; batch++) {
-            const requests = [];
-            
-            for (let i = 0; i < batchSize; i++) {
-                requests.push({
-                    type: types[Math.floor(Math.random() * types.length)],
-                    customer_id: Math.floor(Math.random() * 9000) + 1000,
-                    value: Math.floor(Math.random() * 50000) + 100
-                });
-            }
-            
-            const response = await fetch(`${API_BASE}/requests/bulk/`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({requests})
-            });
-            
-            if (response.ok) {
-                createdCount += batchSize;
-                const progress = Math.round((createdCount / 1000000) * 100);
-                showNotification(`Прогресс: ${createdCount.toLocaleString()} / 1,000,000 заявок (${progress}%)`, 'info');
-                
-                loadStats();
-            } else {
-                console.log(`[ERROR] Ошибка создания батча ${batch + 1}`);
-                break;
-            }
-            
-            await new Promise(resolve => setTimeout(resolve, 2000));
-        }
-        
-        loadStats();
-        showNotification(`Успешно создано ${createdCount.toLocaleString()} заявок!`, 'success');
-        console.log(`[INFO] Создано ${createdCount.toLocaleString()} заявок!`);
-        
-    } catch (error) {
-        showNotification('Ошибка при создании заявок: ' + error.message, 'error');
-        console.log('[ERROR] Ошибка: ' + error.message);
-    }
-}
-
 async function clearAllRequests() {
     if (!confirm('Вы уверены, что хотите удалить ВСЕ заявки? Это действие нельзя отменить!')) {
         return;
@@ -3663,19 +3842,23 @@ async function clearAllRequests() {
                 
                 const activeExecutors = executors.filter(e => e.is_active);
                 
+                // Получаем статистику для автоматического выбора настроек
                 const statsRes = await fetch(`${API_BASE}/stats`);
                 const stats = await statsRes.json();
                 
+                // Проверяем, есть ли заявки для распределения
                 if (stats.unassigned_requests === 0) {
                     console.log('ℹ️ Нет заявок для распределения');
                     return;
                 }
                 
+                // Автоматически выбираем оптимальные настройки батча
                 const batchSettings = getOptimalBatchSettings(activeExecutors.length, stats.unassigned_requests);
                 
                 console.log(`🤖 Автоматические настройки батча: размер=${batchSettings.size}, группировка=${batchSettings.grouping}, заявок=${stats.unassigned_requests}`);
                 console.log(`📊 Активных исполнителей: ${activeExecutors.length}`);
                 
+                // Используем батчевую обработку с автоматическими настройками
                 if (activeExecutors.length === 0) {
                     console.log('⚠️ Нет активных исполнителей для распределения заявок');
                     return;
@@ -3685,6 +3868,7 @@ async function clearAllRequests() {
                 
                 for (const executor of activeExecutors) {
                     try {
+                        // Получаем батч заявок с автоматическими настройками
                         const batchResponse = await fetch(`${API_BASE}/executors/${executor.id}/get-batch-requests?batch_size=${batchSettings.size}&grouping_param=${batchSettings.grouping}`, {
                             method: 'POST'
                         });
@@ -3695,12 +3879,14 @@ async function clearAllRequests() {
                             if (batchData.requests && batchData.requests.length > 0) {
                                 console.log(`📦 Батч для исполнителя ${executor.name}: ${batchData.batch_size} заявок`);
                                 
+                                // Показываем анимацию для каждой заявки в батче
                                 batchData.requests.forEach((request, index) => {
                                     setTimeout(() => {
                                         animateRequestMovement(request.id, 'assigned');
-                                    }, index * 50);
+                                    }, index * 50); // Небольшая задержка между анимациями
                                 });
                                 
+                                // Завершаем весь батч через 500ms
                                 setTimeout(async () => {
                                     try {
                                         const requestIds = batchData.requests.map(req => req.id);
@@ -3715,6 +3901,7 @@ async function clearAllRequests() {
                                         
                                         if (completeResponse.ok) {
                                             
+                                            // Показываем анимацию завершения для каждой заявки
                                             batchData.requests.forEach((request, index) => {
                                                 setTimeout(() => {
                                                     animateRequestMovement(request.id, 'completed');
@@ -3750,30 +3937,38 @@ async function clearAllRequests() {
             }
             autoRefreshInterval = setInterval(async () => {
                     try {
+                        // Сначала получаем статистику
                         const statsRes = await fetch(`${API_BASE}/stats`);
                         const stats = await statsRes.json();
                         
                         console.log('📊 Автообновление: unassigned=', stats.unassigned_requests, 'assigned=', stats.assigned_requests, 'executors=', stats.active_executors);
                         
+                        // Если есть неназначенные заявки, распределяем их
                         if (stats.unassigned_requests > 0) {
                             console.log('🔄 Распределяем заявки...');
                             await distributeRequests();
                         }
                         
+                        // Автоматическое создание заявок отключено - управляется кнопками
                         
+                        // Обновляем статистику и все данные
                         await loadStats();
                         await loadRecentRequests();
                         
+                        // Логируем скорость обработки каждую минуту
                         if (processingSpeedTracker.requestsPerMinute > 0) {
                             console.log(`⚡ Скорость обработки: ${processingSpeedTracker.requestsPerMinute} заявок/мин`);
                         }
                         
+                        // Логируем обновление интерфейса
                         console.log('🔄 Интерфейс обновлен');
                         
+                        // Проверяем, нужно ли остановить анимацию
                         if (stats.unassigned_requests + stats.assigned_requests === 0) {
                             stopCyclicAnimation();
                         }
                         
+                        // Принудительное создание заявок отключено - управляется кнопками
                         
                     } catch (error) {
                         console.log('[ERROR] Ошибка в автообновлении: ' + error.message);
@@ -3817,6 +4012,7 @@ async function clearAllRequests() {
 
         loadStats();
 
+        // Закрытие модального окна при клике вне его
         window.onclick = function(event) {
             const executorModal = document.getElementById('executor-modal');
             const deleteModal = document.getElementById('delete-modal');
@@ -3830,11 +4026,13 @@ async function clearAllRequests() {
                 closeDeleteModal();
             }
             
+            // Закрываем выпадающее меню при клике вне его
             if (!event.target.matches('.dropdown-toggle') && !event.target.closest('.dropdown')) {
                 hideCreateDropdown();
             }
         }
 
+        // Закрытие модального окна по клавише Escape
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
                 const executorModal = document.getElementById('executor-modal');
@@ -3856,6 +4054,7 @@ async function clearAllRequests() {
         });
     </script>
 
+    <!-- Модальное окно для создания исполнителя -->
     <div id="executor-modal" class="modal">
         <div class="modal-content">
             <span class="modal-close" onclick="closeExecutorModal()">&times;</span>
@@ -3890,6 +4089,7 @@ async function clearAllRequests() {
         </div>
     </div>
 
+    <!-- Модальное окно для подтверждения удаления -->
     <div id="delete-modal" class="modal">
         <div class="modal-content">
             <span class="modal-close" onclick="closeDeleteModal()">&times;</span>

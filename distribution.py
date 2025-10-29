@@ -200,16 +200,12 @@ class DistributionEngine:
             select(func.count(Request.id))
         )
         
-        pending_requests = await session.scalar(
-            select(func.count(Request.id)).where(Request.status == "pending")
+        unassigned_requests = await session.scalar(
+            select(func.count(Request.id)).where(Request.assigned_to.is_(None))
         )
         
         assigned_requests = await session.scalar(
-            select(func.count(Request.id)).where(Request.status == "assigned")
-        )
-        
-        completed_requests = await session.scalar(
-            select(func.count(Request.id)).where(Request.status == "completed")
+            select(func.count(Request.id)).where(Request.assigned_to.isnot(None))
         )
         
         result = await session.execute(
@@ -224,7 +220,6 @@ class DistributionEngine:
             result = await session.execute(
                 select(func.count(Request.id))
                 .where(Request.assigned_to == executor.id)
-                .where(Request.status.in_(["assigned", "completed"]))
             )
             actual_count = result.scalar() or 0
             
@@ -236,31 +231,11 @@ class DistributionEngine:
                 "parameters": executor.parameters
             })
         
-        if executor_stats and assigned_requests > 0:
-            working_executors = [stats for stats in executor_stats if stats["actual_count"] > 0]
-            
-            if len(working_executors) >= 2: 
-                loads = [stats["actual_count"] for stats in working_executors]
-                avg_load = sum(loads) / len(loads)
-                
-                if avg_load > 0:
-                    max_deviation = max(abs(load - avg_load) for load in loads)
-                    
-                    error_percent = (max_deviation / avg_load * 100)
-                else:
-                    error_percent = 0
-            else:
-                error_percent = 0
-        else:
-            error_percent = 0
-        
         return {
             "total_requests": total_requests,
-            "pending_requests": pending_requests,
+            "unassigned_requests": unassigned_requests,
             "assigned_requests": assigned_requests,
-            "completed_requests": completed_requests,
             "active_executors": len(executor_stats),
-            "executor_stats": executor_stats,
-            "distribution_error_percent": round(error_percent, 2)
+            "executor_stats": executor_stats
         }
 

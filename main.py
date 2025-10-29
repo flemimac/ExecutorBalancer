@@ -95,11 +95,6 @@ def match_parameter_values(executor_param: str, request_param: str) -> bool:
         return executor_param.lower() == request_param.lower()
 
 
-app = FastAPI(
-    title="Request Distribution System",
-    description="Система равномерного распределения заявок между исполнителями",
-    version="1.0.0"
-)
 
 
 class RequestCreate(BaseModel):
@@ -124,9 +119,7 @@ class ExecutorUpdate(BaseModel):
 class RequestResponse(BaseModel):
     id: int
     parameters: Dict[str, Any]
-    status: str
     assigned_to: Optional[int]
-    assigned_at: Optional[datetime]
     created_at: datetime
 
 
@@ -138,18 +131,22 @@ class ExecutorResponse(BaseModel):
     is_active: bool
     created_at: datetime
 
-class RequestComplete(BaseModel):
-    result: str = "Completed"
 
-class BatchCompleteRequest(BaseModel):
-    request_ids: List[int]
-    result: str = "Batch completed"
+from contextlib import asynccontextmanager
 
-
-@app.on_event("startup")
-async def startup_event():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     """Инициализация базы данных при запуске"""
     await init_db()
+    yield
+    # Здесь можно добавить код для очистки при завершении
+
+app = FastAPI(
+    title="Request Distribution System",
+    description="Система равномерного распределения заявок между исполнителями",
+    version="1.0.0",
+    lifespan=lifespan
+)
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -170,7 +167,6 @@ async def create_request(
     """Создать одну заявку"""
     db_request = Request(
         parameters=request_data.parameters,
-        status="pending"
     )
     session.add(db_request)
     await session.commit()
@@ -186,7 +182,7 @@ async def create_requests_bulk(
 ):
     """Создать множество заявок одним запросом"""
     db_requests = [
-        Request(parameters=params, status="pending")
+        Request(parameters=params)
         for params in request_data.requests
     ]
     
@@ -199,24 +195,6 @@ async def create_requests_bulk(
     }
 
 
-@app.post("/requests/{request_id}/complete")
-async def complete_request(
-    request_id: int,
-    session: AsyncSession = Depends(get_db)
-):
-    """Завершить обработку заявки"""
-    result = await session.execute(
-        select(Request).where(Request.id == request_id)
-    )
-    request = result.scalar_one_or_none()
-    
-    if not request:
-        raise HTTPException(status_code=404, detail="Заявка не найдена")
-    
-    request.status = "completed"
-    await session.commit()
-    
-    return {"message": "Заявка завершена", "request_id": request_id}
 
 
 @app.get("/requests/{request_id}", response_model=RequestResponse)
@@ -408,7 +386,6 @@ async def upload_excel(
             if isinstance(params, dict):
                 db_request = Request(
                     parameters=params,
-                    status="pending"
                 )
                 session.add(db_request)
                 created += 1
@@ -441,10 +418,10 @@ async def clear_all_requests(session: AsyncSession = Depends(get_db)):
 async def get_batch_requests(
     executor_id: int,
     batch_size: int = 5,
-    grouping_param: str = "city",  # city, data_type, или custom
+    grouping_param: str = "city",
     db: AsyncSession = Depends(get_db)
 ):
-    """Получить батч заявок для исполнителя с группировкой по параметру"""
+    """Получить батч заявок для исполнителя"""
     try:
         # Получаем исполнителя
         result = await db.execute(
@@ -455,22 +432,9 @@ async def get_batch_requests(
         if not executor:
             raise HTTPException(status_code=404, detail="Исполнитель не найден или неактивен")
         
-        # Получаем параметры исполнителя
-        executor_params = executor.parameters or {}
-        executor_city = executor_params.get("city")
-        executor_data_type = executor_params.get("data_type")
-        
-        # Строим запрос для получения заявок
-        query = select(Request).where(Request.status == "pending")
-        
-        # Пока что убираем фильтрацию по параметрам для упрощения
-        # В будущем можно добавить более сложную логику фильтрации
-        
-        # Простая группировка по ID
-        query = query.order_by(Request.id)
-        
-        # Ограничиваем количество заявок
-        query = query.limit(batch_size)
+        # Получаем заявки (только те, что не назначены)
+        query = select(Request).where(Request.assigned_to.is_(None))
+        query = query.order_by(Request.id).limit(batch_size)
         
         result = await db.execute(query)
         requests = result.scalars().all()
@@ -478,37 +442,26 @@ async def get_batch_requests(
         if not requests:
             return {"requests": [], "batch_size": 0, "message": "Нет доступных заявок для батча"}
         
-        # Назначаем заявки исполнителю
-        assigned_requests = []
+        # Просто назначаем заявки исполнителю (без статусов)
         for request in requests:
-            request.status = "assigned"
             request.assigned_to = executor_id
-            request.assigned_at = datetime.utcnow()
             executor.total_assigned += 1
-            assigned_requests.append(request)
         
         await db.commit()
-        
-        # Обновляем объекты после коммита
-        for request in assigned_requests:
-            await db.refresh(request)
         
         return {
             "requests": [
                 {
                     "id": req.id,
                     "parameters": req.parameters,
-                    "status": req.status,
                     "assigned_to": req.assigned_to,
-                    "assigned_at": req.assigned_at,
                     "created_at": req.created_at
                 }
-                for req in assigned_requests
+                for req in requests
             ],
-            "batch_size": len(assigned_requests),
+            "batch_size": len(requests),
             "executor_id": executor_id,
-            "grouping_param": grouping_param,
-            "message": f"Назначено {len(assigned_requests)} заявок батчем"
+            "message": f"Передано {len(requests)} заявок исполнителю"
         }
         
     except Exception as e:
@@ -516,44 +469,6 @@ async def get_batch_requests(
         raise HTTPException(status_code=500, detail=f"Ошибка получения батча заявок: {str(e)}")
 
 
-@app.post("/requests/batch-complete")
-async def batch_complete_requests(
-    request: BatchCompleteRequest,
-    db: AsyncSession = Depends(get_db)
-):
-    """Завершить несколько заявок батчем"""
-    try:
-        # Получаем заявки
-        result_query = await db.execute(
-            select(Request).where(
-                Request.id.in_(request.request_ids),
-                Request.status == "assigned"
-            )
-        )
-        requests = result_query.scalars().all()
-        
-        if not requests:
-            return {"message": "Нет заявок для завершения", "completed": 0}
-        
-        # Завершаем заявки
-        completed_count = 0
-        for req in requests:
-            req.status = "completed"
-            req.completed_at = datetime.utcnow()
-            req.result = request.result
-            completed_count += 1
-        
-        await db.commit()
-        
-        return {
-            "message": f"Завершено {completed_count} заявок батчем",
-            "completed": completed_count,
-            "request_ids": [req.id for req in requests]
-        }
-        
-    except Exception as e:
-        await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Ошибка завершения батча заявок: {str(e)}")
 
 
 @app.get("/")

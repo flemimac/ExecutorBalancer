@@ -12,13 +12,10 @@ class Request(Base):
     
     id = Column(Integer, primary_key=True, index=True)
     parameters = Column(JSON)
-    status = Column(String, default="pending")  
     assigned_to = Column(Integer, ForeignKey("executors.id"), nullable=True)
-    assigned_at = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     
     __table_args__ = (
-        Index('idx_status', 'status'),
         Index('idx_assigned_to', 'assigned_to'),
     )
 
